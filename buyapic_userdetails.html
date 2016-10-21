@@ -1,0 +1,54 @@
+<?php if ( !session_id() ) { session_start(); } ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Пользователь <?php echo $_SESSION['pageInfo']['userName']; ?> на BuyAPic.ru</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<link rel="stylesheet" href="styles.css">-->
+    </head>
+    <body>
+        <?php include 'buyapic_head.html'; ?>
+        <div>            
+            <div>
+                <div>
+                    <a href='/buyapic_userdetails.html'>
+                        <?php echo $_SESSION['pageInfo']['userName']; ?>
+                    </a>
+                </div>
+                
+                <a href="buyapic_userdetails.html">
+                    <img src="<?php echo $_SESSION['pageInfo']['photoLink']; ?>" 
+                         alt="Your avatar">
+                </a> 
+                
+                <div>
+                    <table>
+                        <tr>
+                            <td>Email</td>
+                            <td><?php echo $_SESSION['pageInfo']['email']; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Обо мне</td>
+                            <td><?php echo $_SESSION['pageInfo']['selfInfo']; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Профиль в соц.сети</td>
+                            <td><?php echo $_SESSION['pageInfo']['webPage']; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Номер счета</td>
+                            <td><?php echo $_SESSION['pageInfo']['bankAccount']; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Зарегистрирован</td>
+                            <td><?php echo $_SESSION['pageInfo']['registered']; ?></td>
+                        </tr>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+    </body>
+</html>

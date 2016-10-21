@@ -1,0 +1,158 @@
+<?php if ( !session_id() ) { session_start(); } ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Конфигурация профиля <?php echo $_SESSION['pageInfo']['userName']; ?> на BuyAPic.ru</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<link rel="stylesheet" href="styles.css">-->
+    </head>
+    <body>
+        <?php include 'buyapic_head.html'; ?>
+        <div>
+            <div>
+                <form action="buyapic_userdetails.php" method="post">
+                    <div>
+                        <div>Основные настройки</div>
+                        <table>
+                            
+                            <tr>
+                                <td>Имя</td>
+                                <td>
+                                    <input type="text" name="userName" 
+                                           placeholder=
+                             "<?php echo $_SESSION['pageInfo']['userName']; ?>">
+                                </td>
+                            <tr>
+                            <tr>
+                                <td>Профиль в соц.сети</td>
+                                <td>
+                                    <input type="text" name="webPage" 
+                                           placeholder=
+                              "<?php echo $_SESSION['pageInfo']['webPage']; ?>">
+                                </td>
+                                <td>
+                                    <input type="submit" name="deleteWebPage"
+                                           value="Удалить">
+                                </td>
+                            <tr>
+                            <tr>
+                                <td>Номер счета</td>
+                                <td>
+                                    <input type="text" name="bankAccount" 
+                                           placeholder=
+                         "<?php echo $_SESSION['pageInfo']['bankAccount']; ?>" >
+                                </td>
+                                <td>
+                                    <input type="submit" name="deleteBankAccount"
+                                           value="Удалить">
+                                </td>
+                            </tr>
+                                <td>
+                                    <input type=submit name="changeBasic" 
+                                           value="Изменить">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+                
+                <br>
+
+                <div>
+                    <div>Ваша фотография</div>
+                    <div><img src="<?php echo $_SESSION['pageInfo']['photoLink']; ?>" 
+                              alt="Your avatar"></div>
+                
+                <form enctype="multipart/form-data" 
+                      action="buyapic_userdetails.php" method="post">
+                    <div>
+                        <input type="submit" name="deleteAvatar"
+                               value="Удалить">
+                    </div>
+                    <div>
+                        <input type="hidden" name="MAX_FILE_SIZE" 
+                               value="30000" />
+                        <?php if (isset($_SESSION['error']['upload'])) {
+                        echo $_SESSION['error']['upload']."<br>";
+                        unset ($_SESSION['error']['upload']); } ?>
+                        Выбрать новое фото (в формате JPEG) на компьютере:<br>
+                        <input type="file" name="newAvatar" />
+                        <br>
+                        <input type="submit" name="changeAvatar" 
+                               value="Подтвердить" />
+                    </div>
+                </form>
+                </div>
+                
+                <br>
+                
+                <form action="buyapic_userdetails.php" method="post">
+                    <div>
+                        <div>
+                            Расскажите о себе:
+                        </div>
+                        <div>
+                            <textarea name="selfInfo" cols="40" rows="18"><?php 
+                                echo $_SESSION['pageInfo']['selfInfo']; 
+                            ?></textarea>
+                        </div>
+                    <input type="submit" name="changeSelfInfo"
+                           value="Изменить">
+                    </div>
+                </form>
+                
+                <br>
+                
+                <form action="buyapic_userdetails.php" method="post">
+                    <div>
+                        <div>Сменить пароль</div>
+                        <table>
+                            <tr>
+                                <td>Старый пароль</td>
+                                <td>
+                                    <input type="password" 
+                                           name="oldPassword" 
+                                           placeholder="Старый пароль"
+                                           autocomplete='off'
+                                           required="required">
+                                </td>
+                                <td>
+                                    <a href="/buyapic_recover.php">
+                                        Забыли пароль ?
+                                    </a>
+                                </td>
+                            <tr>
+                                <td>Новый пароль</td>
+                                <td>
+                                    <input type="password" 
+                                           name="newPassword" 
+                                           placeholder="Новый пароль"
+                                           autocomplete='off'
+                                           required="required">
+                                </td>
+                                <td></td>
+                            <tr>
+                                <td>Подтвердите пароль</td>
+                                <td>
+                                    <input type="password" 
+                                           name="newPasswordConfirm" 
+                                           placeholder="Подтвердите пароль"
+                                           autocomplete='off' 
+                                           required="required">
+                                </td>
+                                <td></td>
+                            <tr>
+                                <td colspan=3>
+                                    <input type=submit name="changePassword"
+                                           value="Сменить пароль">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>                
+                
+            </div>
+        </div>
+    </body>
+</html>

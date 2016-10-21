@@ -1,0 +1,63 @@
+body {
+    background-color: floralwhite;
+}
+h1 {
+    color: blueviolet;
+}
+p {
+    color: red;
+}
+table {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+	}
+
+td, th {
+	border: 1px solid floralwhite;
+	
+	font-family: arial, sans-serif;
+	text-align: left;
+	padding: 8px;
+	}
+tr:nth-child(even) {
+	background-color: floralwhite;
+	}
+	
+.divhead {
+	margin-top: 20px;
+	background-color: antiquewhite;
+	font-family: arial, sans-serif;
+	width: 100%;
+	border: 3px solid antiquewhite;
+}
+
+.right {
+	margin: 5px 5px 5px 5px;
+	float: right;
+}
+
+a {
+	font-family: "arial black", sans-serif;
+	color: blueviolet;
+}
+
+.e
+{
+	margin: 5px 5px 5px 5px;
+	float: right;
+	color: red;
+}
+
+.note
+{
+	font-size: 13px;
+	color: blueviolet;
+}
+
+.centralblue
+{
+	text-align: center;
+	color: blueviolet;
+}
+

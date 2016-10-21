@@ -1,0 +1,74 @@
+<?php if ( !session_id() ) { session_start(); } ?>
+<!DOCTYPE html>
+<!--
+    Форма авторизации.
+    Отображается, если при попытке авторизации в шапке пользователь ошибся.
+-->
+<html>
+    <head>
+        <title>Ошибка авторизации на BuyAPic.ru</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<link rel="stylesheet" href="styles.css">-->
+    </head>
+    <body>
+        <?php include 'buyapic_head.html'; ?>
+        <form action="buyapic_authorization.php" method="post">
+            <table>
+                <tr>
+                    <th>Вход</th>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>
+                            <?php
+                            echo htmlspecialchars($_SESSION['error']['message']);
+                            unset($_SESSION['error']);
+                            ?>
+                        </h4>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="email" 
+                                               name="email" 
+                                               placeholder="Email"
+                                               required="required" >
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="password" 
+                                               name="password" 
+                                               placeholder="Пароль"
+                                               autocomplete="off" >
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="submit" 
+                                               value="Войти" 
+                                               autofocus>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        В вашем браузере должны быть включены Куки и JavaScript!
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="/buyapic_recover.php">
+                                            Забыли Email или пароль?
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+    </body>
+</html>

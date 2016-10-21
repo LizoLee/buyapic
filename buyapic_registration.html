@@ -1,0 +1,71 @@
+<?php if ( !session_id() ) { session_start(); } ?>
+<!DOCTYPE html>
+<!--
+    Форма регистрации
+-->
+<html>
+    <head>
+        <title>Регистрация на BuyAPic.ru</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<link rel="stylesheet" href="styles.css">-->
+    </head>
+    <body>
+        <?php include 'buyapic_head.html'; ?>
+        <h1 class="centralblue">Регистрация</h1>
+        <form action="buyapic_registration.php" method="post" 
+              autocomplete="off">
+            
+            <table>
+                <tr>
+                    <td class="note" style="text-align: center">
+                        Поля, отмеченные *, обязательны к заполнению
+                    </td>
+                </tr>
+                <?php if ( isset($_SESSION['error']) ) { ?>
+                <tr>
+                    <td class="note" style="text-align: center; color: red">
+                        <?php echo $_SESSION['error']['message']; ?>
+                    </td>
+                </tr>
+                <?php } ?>
+                <tr>
+                    <td style="text-align: center">
+                        <input type="text" name="newUsername" placeholder="*Имя"
+                               required="required" maxlength="32" autofocus>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">
+                        <input type="email" name="email" placeholder="*Email"
+                               maxlength="40" value=""  required="required">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">
+                        <input type="password" name="newPassword" 
+                               placeholder="*Пароль" autocomplete="off" 
+                               required="required">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center">
+                        <input type="password" name="newPasswordConfirm" 
+                               placeholder="*Повторите пароль" autocomplete="off" 
+                               required="required">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center">
+                        <div>
+                            <input type="submit" value="Подтвердить">
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+            
+        </form>
+
+    </body>
+</html>
