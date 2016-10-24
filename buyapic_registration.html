@@ -22,13 +22,16 @@
                         Поля, отмеченные *, обязательны к заполнению
                     </td>
                 </tr>
+                
                 <?php if ( isset($_SESSION['error']) ) { ?>
                 <tr>
                     <td class="note" style="text-align: center; color: red">
-                        <?php echo $_SESSION['error']['message']; ?>
+                        <?php echo $_SESSION['error']['message'];
+                              unset($_SESSION['error']); ?>
                     </td>
                 </tr>
                 <?php } ?>
+                
                 <tr>
                     <td style="text-align: center">
                         <input type="text" name="newUsername" placeholder="*Имя"

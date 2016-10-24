@@ -11,7 +11,7 @@
         <?php include 'buyapic_head.html'; ?>
         <div>
             <div>
-                <form action="buyapic_userdetails.php" method="post">
+                <form action="buyapic_config_userdetails.php" method="post">
                     <div>
                         <div>Основные настройки</div>
                         <table>
@@ -65,7 +65,7 @@
                               alt="Your avatar"></div>
                 
                 <form enctype="multipart/form-data" 
-                      action="buyapic_userdetails.php" method="post">
+                      action="buyapic_config_userdetails.php" method="post">
                     <div>
                         <input type="submit" name="deleteAvatar"
                                value="Удалить">
@@ -73,10 +73,14 @@
                     <div>
                         <input type="hidden" name="MAX_FILE_SIZE" 
                                value="30000" />
+                        
                         <?php if (isset($_SESSION['error']['upload'])) {
                         echo $_SESSION['error']['upload']."<br>";
                         unset ($_SESSION['error']['upload']); } ?>
-                        Выбрать новое фото (в формате JPEG) на компьютере:<br>
+                        
+                        <div>
+                            Выбрать новое фото (в формате JPEG) на компьютере:<br>
+                        </div>                        
                         <input type="file" name="newAvatar" />
                         <br>
                         <input type="submit" name="changeAvatar" 
@@ -87,7 +91,7 @@
                 
                 <br>
                 
-                <form action="buyapic_userdetails.php" method="post">
+                <form action="buyapic_config_userdetails.php" method="post">
                     <div>
                         <div>
                             Расскажите о себе:
@@ -104,11 +108,21 @@
                 
                 <br>
                 
-                <form action="buyapic_userdetails.php" method="post">
+                <form action="buyapic_config_userdetails.php" method="post">
                     <div>
                         <div>Сменить пароль</div>
                         <table>
                             <tr>
+                                
+                                <?php if ( isset($_SESSION['error']) ) { ?>
+                                <h4>
+                                    <?php
+                                    echo htmlspecialchars($_SESSION['error']['message']);
+                                    unset($_SESSION['error']);
+                                    ?>
+                                </h4>
+                                <?php } ?>
+                                
                                 <td>Старый пароль</td>
                                 <td>
                                     <input type="password" 

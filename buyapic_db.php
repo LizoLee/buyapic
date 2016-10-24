@@ -1,20 +1,15 @@
 <?php
 //Файл функций для работы с базой данных========================================
 
-error_reporting(-1);
-if ( !session_id() ) { session_start(); }
-
-class BuyAPic
+class BuyAPicDataBaseConnection
 {
     //Данные для подключения к БД
     private $dsn = 'mysql:dbname=buyapic;host=127.0.0.1';
     private $user = 'root';
     private $password = 'dreamJ0b';
-    private $opt = array(
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_PERSISTENT         => true
-    );
+    private $opt = array( PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                          PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                          PDO::ATTR_PERSISTENT         => true );
     
     //Подключение к БД
     private function connectDB()
@@ -46,20 +41,6 @@ class BuyAPic
         return NULL;
     }
     
-    //Добавляет новый элемент в БД
-    private function insertDB( string $selectText, array $valuesArray )
-    {
-        $dbh = $this->connectDB();
-        try {
-            $stmt = $dbh->prepare($selectText);
-            $stmt->execute($valuesArray);
-        } catch (PDOException $e) {
-            echo 'Вставка в базу данных не удалась: ' . $e->getMessage();
-        }
-        $dbh = NULL;
-        return TRUE;
-    }
-    
     //Вносит изменения в базу данных
     private function changeDB( string $selectText, array $valuesArray )
     {
@@ -74,104 +55,27 @@ class BuyAPic
         return TRUE;
     }
     
-    //Выбирает, какой метод должен обработать массив $argsArray
-    public function __call(string $methodName, array $argsArray)
+    //Подготавливает выражение для изменения значения поля таблицы User
+    public function changeUserDB ($fieldName, $id, $value)
     {
-        $args = preg_split('/(?<=\w)(?=[A-Z])/', $methodName);
-        $action = array_shift($args);
-        $propertyName = implode('', $args);
-        
-        switch ($action) {
-            case 'get':
-                break;
-            case 'change':
-                switch ($propertyName) {
-                    case 'NameDB':
-                        $selectText = 'UPDATE user SET name = :name '
-                            . '         WHERE user.userid = :userid';
-                        $valuesArray = array( 'userid' => $argsArray[0], 
-                                              'name' => $argsArray[1] );
-                        $this->changeDB($selectText, $valuesArray);
-                        break;
-                    case 'WebPageDB':
-                        $selectText = 'UPDATE user SET webpage = :webpage '
-                            . '         WHERE user.userid = :userid';
-                        $valuesArray = array( 'userid' => $argsArray[0], 
-                                              'webpage' => $argsArray[1] );
-                        $this->changeDB($selectText, $valuesArray);
-                        break;
-                    case 'BankAccountDB':
-                        $selectText = 'UPDATE user SET bankaccount = :bankaccount '
-                            . '         WHERE user.userid = :userid';
-                        $valuesArray = array( 'userid' => $argsArray[0], 
-                                              'bankaccount' => $argsArray[1] );
-                        $this->changeDB($selectText, $valuesArray);
-                        break;
-                    case 'PhotoLinkDB':
-                        $selectText = 'UPDATE user SET photolink = :photolink '
-                            . '         WHERE user.userid = :userid';
-                        $valuesArray = array( 'userid' => $argsArray[0], 
-                                              'photolink' => $argsArray[1] );
-                        $this->changeDB($selectText, $valuesArray);
-                        break;
-                    case 'SelfInfoDB':
-                        $selectText = 'UPDATE user SET selfinfo = :selfinfo '
-                            . '         WHERE user.userid = :userid';
-                        $valuesArray = array( 'userid' => $argsArray[0], 
-                                              'selfinfo' => $argsArray[1] );
-                        $this->changeDB($selectText, $valuesArray);
-                        break;
-                    case 'PasswordDB':
-                        $selectText = 'UPDATE user SET hash = :hash '
-                            . '         WHERE user.userid = :userid';
-                        $valuesArray = array( 'userid' => $argsArray[0], 
-                                              'hash' => $argsArray[1] );
-                        $this->changeDB($selectText, $valuesArray);
-                        break;
-                }
-                break;
-            case 'delete':
-                switch ($propertyName) {
-                    case 'WebPageDB':
-                        $selectText = 'UPDATE user SET webpage = NULL '
-                                    . 'WHERE user.userid = :userid';
-                        $valuesArray = array( 'userid' => $argsArray[0] );
-                        $this->changeDB($selectText, $valuesArray);
-                        break;
-                    case 'BankAccountDB':
-                        $selectText = 'UPDATE user SET bankaccount = NULL '
-                                    . 'WHERE user.userid = :userid';
-                        $valuesArray = array( 'userid' => $argsArray[0] );
-                        $this->changeDB($selectText, $valuesArray);
-                        break;
-                    case 'PhotoLinkDB':
-                        $selectText = 'UPDATE user SET photolink = NULL '
-                                    . 'WHERE user.userid = :userid';
-                        $valuesArray = array( 'userid' => $argsArray[0] );
-                        $this->changeDB($selectText, $valuesArray);
-                        break;
-                }
-                break;
-            }
-        
+        $selectText = 'UPDATE user SET '.$fieldName.' = :value '
+                    . 'WHERE userid = :userid';
+        $valuesArray = array( 'userid' => $id, 'value' => $value );
+        $this->changeDB($selectText, $valuesArray);
+        return TRUE;
+    }
+    
+    //Подготавливает выражение для удаления значения поля таблицы User
+    public function deleteFromUserDB ($fieldName, $id)
+    {
+        $selectText = 'UPDATE user SET '.$fieldName.' = NULL '
+                    . 'WHERE user.userid = :userid';
+        $valuesArray = array( 'userid' => $id );
+        $this->changeDB($selectText, $valuesArray);
         return TRUE;
     }
 
-        //Возвращает максимальный из уже используемых id
-    private function getMaxIdDB ()
-    {
-        $dbh = $this->connectDB();
-        $maxIdU = $dbh->query('SELECT MAX(userid) FROM user')
-                ->fetch(PDO::FETCH_LAZY);
-        $maxIdP = $dbh->query('SELECT MAX(pictureid) FROM picture')
-                ->fetch(PDO::FETCH_LAZY);
-        $maxIdBR = $dbh->query('SELECT MAX(buyingrequestid) FROM buyingrequest')
-                ->fetch(PDO::FETCH_LAZY);
-        return max ( $maxIdU["MAX(userid)"], $maxIdP["MAX(pictureid)"], 
-                $maxIdBR["MAX(buyingrequestid)"] );
-    }
-
-    //Возвращает id и hash пользователя name
+    //Возвращает id и hash пользователя по email
     public function getAuthorizationDataDB ( $email )
     {
         $selectText = 'SELECT userid, hash FROM user WHERE email = :email';
@@ -183,18 +87,6 @@ class BuyAPic
         return NULL;
     }
     
-    //Возвращает имя пользователя name по его id
-    public function getNameDB ( $userid )
-    {
-        $selectText = 'SELECT name FROM user WHERE userid = :userid';
-        $valuesArray['userid'] = $userid;
-        if ( $arr = $this->selectDB ( $selectText, $valuesArray ) ) {
-            return $arr['name'];
-        }        
-        //Если в базе такого id нет
-        return NULL;
-    }
-    
     //Возвращает информацию о пользователе по его id
     public function getUserInfoDB ( $userid )
     {
@@ -202,7 +94,8 @@ class BuyAPic
                     . 'bankaccount, registered '
                     . 'FROM user WHERE userid = :userid';
         $valuesArray['userid'] = $userid;
-        if ( $arr = $this->selectDB ( $selectText, $valuesArray ) ) {
+        if ( $arr = $this->selectDB ( $selectText, $valuesArray ) ) 
+        {
             $info['userName'] = $arr['name'];
             $info['email'] = $arr['email'];
             $info['photoLink'] = isset($arr['photolink']) ? 
@@ -232,31 +125,18 @@ class BuyAPic
         return FALSE;
     }
     
-    //Добавляет нового пользователя ( $name, $email, $hash ) для художника,
-    //( $email ) для покупателя
-    public function addNewUserDB ()
+    //Регистрирует нового художника
+    public function addNewArtistDB ( $name, $email, $hash, $dts)
     {
-        $id = $this->getMaxIdDB() + 1;
-        $argsArray = func_get_args();
-        if ( func_num_args() == 1 ) {
-            $selectText = "INSERT INTO user (userid, accesslevel, email) " .
-                          "VALUES (:userid, 'Buyer', :email)";
-            $valuesArray = array ( 'userid' => $id, 
-                               'email' => $argsArray[0] );
-        } else {
-            $selectText = "INSERT INTO " . 
-                "user (userid, accesslevel, name, email, hash, "
-                    . "artiststatus, registered) " .
-                "VALUES " . 
-                "(:userid, 'Artist', :name, :email, :hash, "
-                    . "'Ожидает модерации', :registered )";
-            $valuesArray = array ( 'userid' => $id, 
-                               'name' => $argsArray[0], 
-                               'email' => $argsArray[1], 
-                               'hash' => $argsArray[2],
-                               'registered' => $argsArray[3] );
-        }
-        $this->insertDB ( $selectText, $valuesArray );
+        $selectText = "INSERT INTO user "
+                . "(accesslevel, name, email, hash, artiststatus, registered) "
+                . "VALUES "
+                . "('Artist', :name, :email, :hash, 'Awaiting', :registered)";
+            $valuesArray = array ( 'name' => $name, 
+                                   'email' => $email, 
+                                   'hash' => $hash,
+                                   'registered' => $dts );
+        $this->changeDB ( $selectText, $valuesArray );
     }
 }
 ?>

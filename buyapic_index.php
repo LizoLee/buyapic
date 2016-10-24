@@ -1,46 +1,48 @@
 <?php
 //Логика отображения страницы (только перенаправляет на другие страницы)========
 
-error_reporting(-1);
-if ( !session_id() ) {
-    session_start();
+include_once 'buyapic_header.php';
+
+if( !isset($_GET['action']) ) {
+    header('Location: buyapic_index.php?action=main');
 }
 
-//Если пользователь уже авторизовался
-if( isset($_SESSION['authorized']) )
-{
-    include_once 'buyapic_db.php';
-    $db = new BuyAPic;
-    $_SESSION['pageInfo'] = $db->getUserInfoDB($_COOKIE['id']);
-    header('Location: buyapic_main.html');
-}
-//Если  возникла ошибка
-else if ( isset($_SESSION['error']) ) 
-{
-    //Ошибка авторизации
-    if ( $_SESSION['error']['block'] == 'authorization' ) {
-        var_dump($_SESSION);
-    header('Location: buyapic_authorization.html');
+else {
+    switch ($_GET['action'])
+    {
+        case 'main':
+            if (!isset($_SESSION['authorized']) ) {
+                $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
+            } else {
+                $_SESSION['pageInfo'] = $dbConnectionObject->getUserInfoDB($_COOKIE['id']);
+            }
+            unset($_GET['action']);
+            include 'buyapic_main.html';
+            break;
+        case 'authorization':
+            unset($_GET['action']);
+            include 'buyapic_authorization.html';
+            break;
+        case 'registration':
+            unset($_GET['action']);
+            include 'buyapic_registration.html';
+            break;
+        case 'show_userdetails':
+            unset($_GET['action']);
+            include 'buyapic_userdetails.html';
+            break;
+        case 'config_userdetails':
+            unset($_GET['action']);
+            include 'buyapic_config_userdetails.html';
+            break;
+        case 'add_picture':
+            unset($_GET['action']);
+            include 'buyapic_picture.html';
+            break;
+        case 'show_my_pictures':
+            unset($_GET['action']);
+            include 'buyapic_pictures.html';
+            break;
     }
-    
-    //Ошибка при регистрации
-    if ( $_SESSION['error']['block'] == 'registration' ) {
-    header('Location: buyapic_registration.html');
-    }
-}
-else if ( isset($_GET['action']) ) 
-{
-    //Регистрация
-    if ( $_GET['action'] == 'registration' ) {
-    header('Location: buyapic_registration.html');
-    }
-    unset($_GET['action']);
-}
-//Если пользователь не авторизовался или вышел из аккаунта
-else
-{
-    $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
-    header('Location: buyapic_main.html');
-    echo '!!!!!!!!!!anonim!!!!!!!!!!!!';
 }
 ?>

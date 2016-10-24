@@ -1,8 +1,7 @@
 <?php
 //Выход из аккаунта=============================================================
 
-error_reporting(-1);
-if ( !session_id() ) { session_start(); }
+include_once 'buyapic_header.php';
 
 session_unset();
 unset($_GET);

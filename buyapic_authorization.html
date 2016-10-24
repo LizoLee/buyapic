@@ -20,12 +20,16 @@
                 </tr>
                 <tr>
                     <td>
+                        
+                        <?php if ( isset($_SESSION['error']) ) { ?>
                         <h4>
                             <?php
                             echo htmlspecialchars($_SESSION['error']['message']);
                             unset($_SESSION['error']);
                             ?>
                         </h4>
+                        <?php } ?>
+                        
                         <div>
                             <table>
                                 <tr>

@@ -13,10 +13,12 @@
     </head>
     <body>
         <div>
+            
         <?php if( $_SESSION['pageInfo']['userName'] == 'anonim' ) { ?>
+        
         <fieldset>
             <legend>
-                <a href="buyapic_index.php">
+                <a href="buyapic_index.php?action=main">
                     <img src="logo.png" alt="logo" 
                          style="width:246px;height:42px;border:0">
                 </a>
@@ -34,6 +36,7 @@
         </fieldset>
         
         <?php } else { ?>
+        
         <fieldset>
             <legend>
                 <a href="buyapic_index.php">
@@ -45,17 +48,19 @@
                 <a href="buyapic_exit.php">Выход</a>
             </div>
             <div>
-                <a href="buyapic_userdetails.html">
+                <a href="buyapic_index.php?action=show_userdetails">
                     <?php 
                     echo htmlspecialchars($_SESSION['pageInfo']['userName']); ?>
                 </a>
-                <a href="buyapic_config_userdetails.html">Редактировать профиль
+                <a href="buyapic_index.php?action=config_userdetails">Редактировать профиль
                 </a>                
-                <a href="/buyapic_addpicture.php">Опубликовать новую работу</a>                
-                <a href="/buyapic_mypictures.php">Мои работы</a>                    
+                <a href="buyapic_index.php?action=add_picture">Опубликовать новую работу</a>                
+                <a href="buyapic_index.php?action=show_my_pictures">Мои работы</a>                    
             </div>
         </fieldset>
+        
         <?php } ?>
+        
     </div>
     </body>
 </html>
