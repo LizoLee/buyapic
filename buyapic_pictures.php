@@ -87,11 +87,4 @@ if ( isset($_POST['notForFree']) ) {
 }
 
 header('Location: buyapic_index.php?action=add_picture');
-
-echo "<pre>";
-var_dump($_POST);
-var_dump($_FILES);
-var_dump($_SESSION);
-echo "</pre>";
-
 ?>
