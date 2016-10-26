@@ -22,4 +22,26 @@ function makeHash ($password) {
     return crypt ( $password, '$2a$10$'.$salt );
 }
 
+//Проверка загружаемой картинки
+function checkUploadPicture ( string $name )
+{
+    if ( !($_FILES[$name]['type'] == 'image/jpeg') ) {
+        return 'Картинка должна быть в формате jpeg';
+    }
+    return NULL;
+}
+
+//Освобождает и удаляет папку
+function deleteFolder ( string $folder )
+{
+    $files = scandir($folder);
+    array_shift($files);
+    array_shift($files);
+    foreach($files as $file) {
+        unlink( $folder . '/' . $file );
+    }
+    rmdir ($folder);
+    return NULL;
+}
+
 ?>

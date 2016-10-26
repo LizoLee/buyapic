@@ -138,6 +138,25 @@ class BuyAPicDataBaseConnection
                                    'registered' => $dts );
         $this->changeDB ( $selectText, $valuesArray );
     }
+    
+    //Регистрирует новую картину
+    public function addNewPictureDB ( $userid, $previewLink, $hdLink, $date, 
+                                      $description, $price )
+    {
+        $selectText = "INSERT INTO picture "
+                    . "(userid, previewlink, hdlink, publicationdate, "
+                    . "description, price, picturestatus) "
+                    . "VALUES "
+                    . "(:userid, :previewlink, :hdlink, :publicationdate, "
+                    . ":description, :price, 'Active')";
+            $valuesArray = array ( 'userid' => $userid, 
+                                   'previewlink' => $previewLink, 
+                                   'hdlink' => $hdLink, 
+                                   'publicationdate' => $date, 
+                                   'description' => $description,
+                                   'price' => $price );
+        $this->changeDB ( $selectText, $valuesArray );
+    }
 }
 ?>
 

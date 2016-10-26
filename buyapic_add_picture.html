@@ -1,0 +1,123 @@
+<?php if ( !session_id() ) { session_start(); } ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Добавление работы</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <?php include 'buyapic_head.html'; ?>
+        <div>
+            <?php if (isset($_SESSION['error']['checkPrice'])) { ?>
+            <div><?php echo $_SESSION['error']['checkPrice']; ?></div>
+            <form action="buyapic_pictures.php" method="post">
+                <input type="submit" name="changePicture" 
+                           value="Да" />
+                <input type="submit" name="notForFree" 
+                           value="Нет" />
+            </form>      
+            <br>
+            <?php } else { ?>
+            
+            <form enctype="multipart/form-data"
+                  action="buyapic_pictures.php" method="post">
+
+                <div>Превью работы</div>
+                <?php if (isset($_SESSION['pictureInfo']['previewLink'])) { ?>
+                <div><img src="<?php echo $_SESSION['pictureInfo']['previewLink']; ?>" 
+                          alt="Preview"></div>
+                <?php } ?>
+                
+                <br>
+                <?php if (isset($_SESSION['error']['uploadPreview'])) {
+                echo $_SESSION['error']['uploadPreview']."<br>";
+                unset ($_SESSION['error']['uploadPreview']); } ?>
+                
+                <div>
+                    <input type="hidden" name="MAX_FILE_SIZE" 
+                           value="30000" />
+                    <div>
+                        Выбрать файл в формате JPEG на компьютере:<br>
+                    </div>
+                    <input type="file" name="newPreview" />
+                    <br>
+                    <input type="submit" name="choosePreview" 
+                           value="Подтвердить" />
+                </div>
+            </form>
+            
+            <br>
+            
+            <form enctype="multipart/form-data"
+                  action="buyapic_pictures.php" method="post">
+                <div>Высокое разрешение</div>
+                <?php if (isset($_SESSION['pictureInfo']['HDLink'])) { ?>
+                <div><img src="<?php echo $_SESSION['pictureInfo']['HDLink']; ?>" 
+                          alt="Picture"></div>
+                <?php } ?>
+                
+                <br>
+                <?php if (isset($_SESSION['error']['uploadHD'])) {
+                echo $_SESSION['error']['uploadHD']."<br>";
+                unset ($_SESSION['error']['uploadHD']); } ?>
+                
+                <div>
+                    <input type="hidden" name="MAX_FILE_SIZE" 
+                           value="100000" />
+                    <div>
+                        Выбрать файл на компьютере:<br>
+                    </div>
+                    <input type="file" name="newHD" />
+                    <br>
+                    <input type="submit" name="chooseHD" 
+                           value="Подтвердить" />
+                </div>
+            </form>
+                
+            <br>
+            
+            <form action="buyapic_pictures.php" method="post">
+                <div>
+                    <div>Цена (в рублях):</div>
+                    <div>
+                        <?php if (isset($_SESSION['pictureInfo']['price'])) { ?>
+                        <input type="text" name="price" maxlength="10" 
+                               value=
+                               "<?php echo $_SESSION['pictureInfo']['price']; ?>"
+                               required="required"> 
+                        <?php } else { ?> 
+                        <input type="text" name="price" maxlength="10" 
+                               placeholder="10.99" required="required">
+                        <?php } ?>
+                    </div>
+                    
+                    <br>
+                    
+                    <div>Описание:</div>
+                    <div>
+                        <?php if (isset($_SESSION['pictureInfo']['price'])) { ?>
+                        <textarea name="description" cols="40" rows="5"><?php 
+                            echo $_SESSION['pictureInfo']['description']; 
+                        ?></textarea>
+                        
+                        <?php } else { ?> 
+                        <textarea name="description" cols="40" rows="5"></textarea>
+                        <?php } ?>
+                    </div>
+                    
+                    <br>
+                    
+                    <?php if (isset($_SESSION['error']['upload'])) {
+                    echo $_SESSION['error']['upload']."<br>";
+                    unset ($_SESSION['error']['upload']); } ?>
+                    
+                    <input type="submit" name="changePicture" 
+                           value="Добавить работу" />
+                </div>
+                
+            </form>
+            <?php } ?>
+        </div>
+    </body>
+</html>

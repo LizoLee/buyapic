@@ -25,18 +25,17 @@ else if ( isset($_POST['deleteAvatar']) ){
     unlink($_SESSION['pageInfo']['photoLink']);
 }
 else if ( isset($_POST['changeAvatar']) ){
-    
-    if ( !($_FILES['newAvatar']['type'] == 'image/jpeg') ) {
-        $_SESSION['error']['upload'] = 'Картинка должна быть в формате jpeg';
-    } else {
+    include_once 'buyapic_functions.php';
+    if ( !($_SESSION['error']['upload']=checkUploadPicture('newAvatar')) ) {
+        unset($_SESSION['error']['upload']);
         $dt = date("Y-m-d_H-i-s");
         $uploadfile = 'uploads/avatars/' . $_COOKIE['id'] . '_avatar_' . $dt ;
         if (!move_uploaded_file($_FILES['newAvatar']['tmp_name'], $uploadfile)) {
             $_SESSION['error']['upload'] = 'Не удалось загрузить файл';
-            print_r($_FILES);
+        } else {
+            $dbConnectionObject->changeUserDB('PhotoLink', $_COOKIE['id'], $uploadfile);
+            unlink($_SESSION['pageInfo']['photoLink']);
         }
-        $dbConnectionObject->changeUserDB('PhotoLink', $_COOKIE['id'], $uploadfile);
-        unlink($_SESSION['pageInfo']['photoLink']);
     }    
 }
 else if ( isset($_POST['changeSelfInfo']) ){

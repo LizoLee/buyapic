@@ -20,28 +20,64 @@ else {
             include 'buyapic_main.html';
             break;
         case 'authorization':
-            unset($_GET['action']);
-            include 'buyapic_authorization.html';
+            if (!isset($_SESSION['authorized']) ) {
+                $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
+                unset($_GET['action']);
+                include 'buyapic_authorization.html';
+            } else {
+                unset($_GET['action']);
+                include 'buyapic_main.html';
+            }
             break;
         case 'registration':
-            unset($_GET['action']);
-            include 'buyapic_registration.html';
+            if (!isset($_SESSION['authorized']) ) {
+                $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
+                unset($_GET['action']);
+                include 'buyapic_registration.html';
+            } else {
+                unset($_GET['action']);
+                include 'buyapic_main.html';
+            }
             break;
         case 'show_userdetails':
-            unset($_GET['action']);
-            include 'buyapic_userdetails.html';
+            if (!isset($_SESSION['authorized']) ) {
+                $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
+                unset($_GET['action']);
+                include 'buyapic_main.html';
+            } else {
+                unset($_GET['action']);
+                include 'buyapic_userdetails.html';
+            }
             break;
         case 'config_userdetails':
-            unset($_GET['action']);
+            if (!isset($_SESSION['authorized']) ) {
+                $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
+                unset($_GET['action']);
+                include 'buyapic_main.html';
+            } else {
+                unset($_GET['action']);
             include 'buyapic_config_userdetails.html';
+            }
             break;
         case 'add_picture':
-            unset($_GET['action']);
-            include 'buyapic_picture.html';
+            if (!isset($_SESSION['authorized']) ) {
+                $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
+                unset($_GET['action']);
+                include 'buyapic_main.html';
+            } else {
+                unset($_GET['action']);
+            include 'buyapic_add_picture.html';
+            }
             break;
         case 'show_my_pictures':
-            unset($_GET['action']);
-            include 'buyapic_pictures.html';
+            if (!isset($_SESSION['authorized']) ) {
+                $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
+                unset($_GET['action']);
+                include 'buyapic_main.html';
+            } else {
+                unset($_GET['action']);
+            include 'buyapic_my_pictures.html';
+            }
             break;
     }
 }
