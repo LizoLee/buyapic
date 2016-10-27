@@ -110,7 +110,7 @@
                     <table>
                         <tr>
                             
-                        <?php if ( isset($_SESSION['error']) ) { ?>
+                        <?php if ( isset($_SESSION['error']['message']) ) { ?>
                         <h4>
                             <?php
                             echo htmlspecialchars($_SESSION['error']['message']);

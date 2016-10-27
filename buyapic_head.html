@@ -13,9 +13,6 @@
     </head>
     <body>
         <div>
-            
-        <?php if( $_SESSION['pageInfo']['userName'] == 'anonim' ) { ?>
-        
         <fieldset>
             <legend>
                 <a href="buyapic_index.php?action=main">
@@ -23,6 +20,9 @@
                          style="width:246px;height:42px;border:0">
                 </a>
             </legend>
+            
+            <?php if( $_SESSION['pageInfo']['userName'] == 'anonim' ) { ?>
+        
             <form action="buyapic_authorization.php" 
                   method="post">
                 <input type="email" name="email" placeholder="Email"
@@ -33,17 +33,9 @@
                     Регистрация
                 </a>
             </form>
-        </fieldset>
         
-        <?php } else { ?>
+            <?php } else { ?>
         
-        <fieldset>
-            <legend>
-                <a href="buyapic_index.php">
-                    <img src="logo.png" alt="main" 
-                         style="width:246px;height:42px;border:0">
-                </a>
-            </legend>
             <div style="float: right">
                 <a href="buyapic_exit.php">Выход</a>
             </div>
@@ -53,14 +45,14 @@
                     echo htmlspecialchars($_SESSION['pageInfo']['userName']); ?>
                 </a>
                 <a href="buyapic_index.php?action=config_userdetails">Редактировать профиль
-                </a>                
-                <a href="buyapic_index.php?action=add_picture">Опубликовать новую работу</a>                
-                <a href="buyapic_index.php?action=show_my_pictures">Мои работы</a>                    
+                </a>
+                <a href="buyapic_index.php?action=show_my_pictures">Мои работы</a>
+                <a href="buyapic_index.php?action=add_picture">Опубликовать новую работу</a>
             </div>
-        </fieldset>
         
         <?php } ?>
         
+        </fieldset>
     </div>
     </body>
 </html>

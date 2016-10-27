@@ -1,0 +1,25 @@
+<?php if ( !session_id() ) { session_start(); } ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Список работ</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <?php include 'buyapic_head.html'; ?>
+        <div>
+            <br>
+            <div>
+                <img src="<?php echo $_SESSION['pictureInfo']['previewLink']; ?>"
+                     alt="Preview">
+            </div>
+            <br>
+            <div><span><?php echo $_SESSION['pictureInfo']['description']; ?></span></div>
+            <br>
+            <div><span>Цена: <?php echo $_SESSION['pictureInfo']['price']; ?> р.</span></div>
+            <br>
+            <div><span>Статус: <?php echo $_SESSION['pictureInfo']['pictureStatus']; ?></span></div>
+        </div>
+    </body>
+</html>

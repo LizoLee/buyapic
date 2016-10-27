@@ -23,7 +23,7 @@
                     </td>
                 </tr>
                 
-                <?php if ( isset($_SESSION['error']) ) { ?>
+                <?php if ( isset($_SESSION['error']['message']) ) { ?>
                 <tr>
                     <td class="note" style="text-align: center; color: red">
                         <?php echo $_SESSION['error']['message'];

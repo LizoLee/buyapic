@@ -56,7 +56,7 @@ else {
                 include 'buyapic_main.html';
             } else {
                 unset($_GET['action']);
-            include 'buyapic_config_userdetails.html';
+                include 'buyapic_config_userdetails.html';
             }
             break;
         case 'add_picture':
@@ -66,7 +66,11 @@ else {
                 include 'buyapic_main.html';
             } else {
                 unset($_GET['action']);
-            include 'buyapic_add_picture.html';
+                if ( isset($_SESSION['pictureInfo']['pictureId']) ) {
+                    unset($_SESSION['pictureInfo']);
+                }
+                $_SESSION['pictureInfo']['show'] = 'add';
+                include 'buyapic_config_picture.html';
             }
             break;
         case 'show_my_pictures':
@@ -75,8 +79,40 @@ else {
                 unset($_GET['action']);
                 include 'buyapic_main.html';
             } else {
+                $_SESSION['pictureList'] = $dbConnectionObject->getUserPicturesDB ($_COOKIE['id']);
                 unset($_GET['action']);
-            include 'buyapic_my_pictures.html';
+                include 'buyapic_my_pictures.html';
+            }
+            break;
+        case 'view_picture':
+            if (!isset($_SESSION['authorized']) ) {
+                $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
+                unset($_GET['action']);
+                include 'buyapic_main.html';
+            } else {
+                $_SESSION['pictureInfo'] = $dbConnectionObject->getPictureInfoDB ($_GET['id']);
+                unset($_GET['action']);
+                include 'buyapic_one_picture.html';
+            }
+            break;
+        case 'config_picture':
+            if (!isset($_SESSION['authorized']) ) {
+                $_SESSION['pageInfo'] = [ 'userName'=>'anonim' ];
+                unset($_GET['action']);
+                include 'buyapic_main.html';
+            } else {
+                if ( isset($_GET['id']) ) {
+                    $_SESSION['pictureInfo'] = $dbConnectionObject
+                            ->getPictureInfoDB ($_GET['id']);
+                } else {
+                    $_SESSION['pictureInfo'] = $dbConnectionObject
+                            ->getPictureInfoDB ($_SESSION['pictureInfo']['pictureId']);
+                }
+                $_SESSION['pictureInfo']['oldPreviewLink'] = $_SESSION['pictureInfo']['previewLink'];
+                $_SESSION['pictureInfo']['oldHDLink'] = $_SESSION['pictureInfo']['HDLink'];
+                unset($_GET['action']);
+                $_SESSION['pictureInfo']['show'] = 'change';
+                include 'buyapic_config_picture.html';
             }
             break;
     }

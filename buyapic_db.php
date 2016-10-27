@@ -22,18 +22,32 @@ class BuyAPicDataBaseConnection
         return $dbh;
     }
     
+//    //Делает выборку по заранее подготовленному запросу
+//    private function selectDB( string $selectText, array $valuesArray )
+//    {
+//        $dbh = $this->connectDB();
+//        $stmt = $dbh->prepare($selectText);
+//        $stmt->execute($valuesArray);
+//        if ( $row = $stmt->fetch(PDO::FETCH_LAZY) ) {
+//            foreach ( $row as $key => $value ) {
+//                if( isset($value) && $key != 'queryString' ) {
+//                    $arr[$key]=$value;
+//                }
+//            }
+//            $dbh = NULL;
+//            return $arr;
+//        }
+//        //Если ничего не найдено
+//        return NULL;
+//    }
+    
     //Делает выборку по заранее подготовленному запросу
     private function selectDB( string $selectText, array $valuesArray )
     {
         $dbh = $this->connectDB();
         $stmt = $dbh->prepare($selectText);
         $stmt->execute($valuesArray);
-        if ( $row = $stmt->fetch(PDO::FETCH_LAZY) ) {
-            foreach ( $row as $key => $value ) {
-                if( isset($value) && $key != 'queryString' ) {
-                    $arr[$key]=$value;
-                }
-            }
+        if ( $arr = $stmt->fetchAll() ) {
             $dbh = NULL;
             return $arr;
         }
@@ -65,6 +79,16 @@ class BuyAPicDataBaseConnection
         return TRUE;
     }
     
+    //Подготавливает выражение для изменения значения поля таблицы Picture
+    public function changePictureDB ($fieldName, $id, $value)
+    {
+        $selectText = 'UPDATE picture SET '.$fieldName.' = :value '
+                    . 'WHERE pictureid = :pictureid';
+        $valuesArray = array( 'pictureid' => $id, 'value' => $value );
+        $this->changeDB($selectText, $valuesArray);
+        return TRUE;
+    }
+    
     //Подготавливает выражение для удаления значения поля таблицы User
     public function deleteFromUserDB ($fieldName, $id)
     {
@@ -81,7 +105,7 @@ class BuyAPicDataBaseConnection
         $selectText = 'SELECT userid, hash FROM user WHERE email = :email';
         $valuesArray['email'] = $email;
         if ( $arr = $this->selectDB ( $selectText, $valuesArray ) ) {
-            return $arr;
+            return $arr[0];
         }
         //Если в базе такого email нет
         return NULL;
@@ -96,20 +120,64 @@ class BuyAPicDataBaseConnection
         $valuesArray['userid'] = $userid;
         if ( $arr = $this->selectDB ( $selectText, $valuesArray ) ) 
         {
-            $info['userName'] = $arr['name'];
-            $info['email'] = $arr['email'];
-            $info['photoLink'] = isset($arr['photolink']) ? 
-                                  $arr['photolink'] : "/uploads/avatars/1.png";
-            $info['selfInfo'] = isset($arr['selfinfo']) ? $arr['selfinfo'] : "-";
-            $info['webPage'] = isset($arr['webpage']) ?
-                                                        $arr['webpage'] : "-";
-            $info['bankAccount'] = isset($arr['bankaccount']) ?
-                                                    $arr['bankaccount'] : "-";
-            $info['registered'] = isset($arr['registered']) ?
-                         date("Y-m-d H:i:s", intval($arr['registered'])) : "-";
+            $info['userName'] = $arr[0]['name'];
+            $info['email'] = $arr[0]['email'];
+            $info['photoLink'] = isset($arr[0]['photolink']) ? 
+                                  $arr[0]['photolink'] : "/uploads/avatars/1.png";
+            $info['selfInfo'] = isset($arr[0]['selfinfo']) ? $arr[0]['selfinfo'] : "-";
+            $info['webPage'] = isset($arr[0]['webpage']) ?
+                                                        $arr[0]['webpage'] : "-";
+            $info['bankAccount'] = isset($arr[0]['bankaccount']) ?
+                                                    $arr[0]['bankaccount'] : "-";
+            $info['registered'] = isset($arr[0]['registered']) ?
+                         date("Y-m-d H:i:s", intval($arr[0]['registered'])) : "-";
             return $info;
-        }        
+        }     
         //Если в базе такого id нет
+        return NULL;
+    }
+    
+    //Возвращает данные картинок пользователя по его id
+    public function getUserPicturesDB ( $userid )
+    {
+        $selectText = 'SELECT pictureid, previewlink, publicationdate, '
+                    . 'description, price, picturestatus '
+                    . 'FROM picture WHERE userid = :userid';
+        $valuesArray['userid'] = $userid;
+        
+        $dbh = $this->connectDB();
+        $stmt = $dbh->prepare($selectText);
+        $stmt->execute($valuesArray);
+        
+        if ( $arr = $stmt->fetchAll(PDO::FETCH_UNIQUE) ) {
+            $dbh = NULL;
+            return $arr;
+        }
+        //Если ничего не найдено
+        return NULL;
+    }
+    
+    //Возвращает данные картинок пользователя по его id
+    public function getPictureInfoDB ( $pictureid )
+    {
+        $selectText = 'SELECT pictureid, previewlink, hdlink, publicationdate, '
+                    . 'description, price, picturestatus '
+                    . 'FROM picture WHERE pictureid = :pictureid';
+        $valuesArray['pictureid'] = $pictureid;
+        
+        if ( $arr = $this->selectDB ( $selectText, $valuesArray ) ) 
+        {
+            $info['pictureId'] = $arr[0]['pictureid'];
+            $info['previewLink'] = $arr[0]['previewlink'];
+            $info['HDLink'] = $arr[0]['hdlink'];
+            $info['publicationDate'] = $dt = date("Y-m-d_H-i-s", $arr[0]['publicationdate']);
+            $info['description'] = $arr[0]['description'];
+            $info['price'] = $arr[0]['price'];
+            $info['pictureStatus'] = $arr[0]['picturestatus'];
+            
+            return $info;
+        }
+        //Если ничего не найдено
         return NULL;
     }
     

@@ -27,7 +27,7 @@ if( isset($_POST['email']) && isset($_POST['password']) )
             $_SESSION['error'] = [ 'block'=>'authorization', 
                 'message'=>'Введен неверный пароль для '.$_POST['email'] ];
             unset($_POST);
-            header('Location: buyapic_index.php?action=authorization');
+//            header('Location: buyapic_index.php?action=authorization');
         }
     } else {
         $_SESSION['error'] = [ 'block'=>'authorization', 
