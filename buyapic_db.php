@@ -21,26 +21,7 @@ class BuyAPicDataBaseConnection
         }
         return $dbh;
     }
-    
-//    //Делает выборку по заранее подготовленному запросу
-//    private function selectDB( string $selectText, array $valuesArray )
-//    {
-//        $dbh = $this->connectDB();
-//        $stmt = $dbh->prepare($selectText);
-//        $stmt->execute($valuesArray);
-//        if ( $row = $stmt->fetch(PDO::FETCH_LAZY) ) {
-//            foreach ( $row as $key => $value ) {
-//                if( isset($value) && $key != 'queryString' ) {
-//                    $arr[$key]=$value;
-//                }
-//            }
-//            $dbh = NULL;
-//            return $arr;
-//        }
-//        //Если ничего не найдено
-//        return NULL;
-//    }
-    
+   
     //Делает выборку по заранее подготовленному запросу
     private function selectDB( string $selectText, array $valuesArray )
     {
