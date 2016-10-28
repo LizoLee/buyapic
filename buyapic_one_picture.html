@@ -9,17 +9,41 @@
     <body>
         <?php include 'buyapic_head.html'; ?>
         <div>
-            <br>
+            <div>
+                <span>Опубликовал </span>
+                <a href="buyapic_index.php?action=show_userdetails&id=<?php echo $_SESSION['pictureInfo']['userId']; ?>">
+                    <?php echo htmlspecialchars($_SESSION['pictureInfo']['userName']); ?>
+                </a>
+            </div>
+            
             <div>
                 <img src="<?php echo $_SESSION['pictureInfo']['previewLink']; ?>"
-                     alt="Preview">
+                     alt="Preview" style="max-height:512px;">
             </div>
+            
             <br>
             <div><span><?php echo $_SESSION['pictureInfo']['description']; ?></span></div>
+            
             <br>
-            <div><span>Цена: <?php echo $_SESSION['pictureInfo']['price']; ?> р.</span></div>
+            <?php if ( $_SESSION['pictureInfo']['price'] == 0 ) { ?>
+                <div>
+                    <a target="_blank" href="<?php echo $_SESSION['pictureInfo']['hdLink']; ?>">
+                        Скачать бесплатно
+                    </a>
+                </div>
+            <?php } else { ?>
+                <div>
+                    <span>Цена: <?php echo $_SESSION['pictureInfo']['price']; ?> р.</span>
+                </div>
+            <?php } ?>
+            
+            <?php if($_SESSION['pictureInfo']['pictureStatus'] == 'Deactivated' ) { ?>
+                <br>
+                <div><span>Не отображается в поиске!</span></div>
+            <?php } ?>
+            
             <br>
-            <div><span>Статус: <?php echo $_SESSION['pictureInfo']['pictureStatus']; ?></span></div>
+            <div><span>Опубликована <?php echo date("d.m.y", $_SESSION['pictureInfo']['publicationDate']); ?></span></div>
         </div>
     </body>
 </html>

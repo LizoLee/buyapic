@@ -21,7 +21,7 @@ class BuyAPicDataBaseConnection
         }
         return $dbh;
     }
-   
+    
     //Делает выборку по заранее подготовленному запросу
     private function selectDB( string $selectText, array $valuesArray )
     {
@@ -80,6 +80,18 @@ class BuyAPicDataBaseConnection
         return TRUE;
     }
 
+    //Проверяет, не использован ли уже email
+    public function isEmailAvailableDB ( $email )
+    {
+        $selectText = 'SELECT userid, hash FROM user WHERE email = :email';
+        $valuesArray['email'] = $email;
+        if ( !$this->selectDB ( $selectText, $valuesArray ) ) {
+            return TRUE;
+        }
+        //Если в базе такого email нет
+        return FALSE;
+    }
+    
     //Возвращает id и hash пользователя по email
     public function getAuthorizationDataDB ( $email )
     {
@@ -95,12 +107,13 @@ class BuyAPicDataBaseConnection
     //Возвращает информацию о пользователе по его id
     public function getUserInfoDB ( $userid )
     {
-        $selectText = 'SELECT name, email, photolink, selfinfo, webpage, '
-                    . 'bankaccount, registered '
+        $selectText = 'SELECT userid, name, email, photolink, selfinfo, webpage, '
+                    . 'bankaccount, registered, artiststatus '
                     . 'FROM user WHERE userid = :userid';
         $valuesArray['userid'] = $userid;
         if ( $arr = $this->selectDB ( $selectText, $valuesArray ) ) 
         {
+            $info['userId'] = $arr[0]['userid'];
             $info['userName'] = $arr[0]['name'];
             $info['email'] = $arr[0]['email'];
             $info['photoLink'] = isset($arr[0]['photolink']) ? 
@@ -112,6 +125,7 @@ class BuyAPicDataBaseConnection
                                                     $arr[0]['bankaccount'] : "-";
             $info['registered'] = isset($arr[0]['registered']) ?
                          date("Y-m-d H:i:s", intval($arr[0]['registered'])) : "-";
+            $info['status'] = $arr[0]['artiststatus'];
             return $info;
         }     
         //Если в базе такого id нет
@@ -123,7 +137,8 @@ class BuyAPicDataBaseConnection
     {
         $selectText = 'SELECT pictureid, previewlink, publicationdate, '
                     . 'description, price, picturestatus '
-                    . 'FROM picture WHERE userid = :userid';
+                    . 'FROM picture WHERE userid = :userid '
+                    . 'ORDER BY publicationdate DESC';
         $valuesArray['userid'] = $userid;
         
         $dbh = $this->connectDB();
@@ -131,8 +146,15 @@ class BuyAPicDataBaseConnection
         $stmt->execute($valuesArray);
         
         if ( $arr = $stmt->fetchAll(PDO::FETCH_UNIQUE) ) {
+            foreach ($arr as $key => $value) {
+                $info[$key]['previewLink'] = $value['previewlink'];
+                $info[$key]['publicationDate'] = $value['publicationdate'];
+                $info[$key]['description'] = $value['description'];
+                $info[$key]['price'] = $value['price'];
+                $info[$key]['pictureStatus'] = $value['picturestatus'];
+            }
             $dbh = NULL;
-            return $arr;
+            return $info;
         }
         //Если ничего не найдено
         return NULL;
@@ -141,17 +163,21 @@ class BuyAPicDataBaseConnection
     //Возвращает данные картинок пользователя по его id
     public function getPictureInfoDB ( $pictureid )
     {
-        $selectText = 'SELECT pictureid, previewlink, hdlink, publicationdate, '
-                    . 'description, price, picturestatus '
-                    . 'FROM picture WHERE pictureid = :pictureid';
+        $selectText = 'SELECT u.userid, u.name, '
+                    . 'p.pictureid, p.previewlink, p.hdlink, p.publicationdate, '
+                    . 'p.description, p.price, p.picturestatus '
+                    . 'FROM picture p INNER JOIN user u ON u.UserID = p.UserID '
+                    . 'WHERE p.PictureID=:pictureid';
         $valuesArray['pictureid'] = $pictureid;
         
         if ( $arr = $this->selectDB ( $selectText, $valuesArray ) ) 
         {
+            $info['userId'] = $arr[0]['userid'];
+            $info['userName'] = $arr[0]['name'];
             $info['pictureId'] = $arr[0]['pictureid'];
             $info['previewLink'] = $arr[0]['previewlink'];
-            $info['HDLink'] = $arr[0]['hdlink'];
-            $info['publicationDate'] = $dt = date("Y-m-d_H-i-s", $arr[0]['publicationdate']);
+            $info['hdLink'] = $arr[0]['hdlink'];
+            $info['publicationDate'] = $arr[0]['publicationdate'];
             $info['description'] = $arr[0]['description'];
             $info['price'] = $arr[0]['price'];
             $info['pictureStatus'] = $arr[0]['picturestatus'];
@@ -162,18 +188,43 @@ class BuyAPicDataBaseConnection
         return NULL;
     }
     
-    //Проверяет, не использован ли уже email
-    public function isEmailAvailableDB ( $email )
+    //Возвращает количество отображаемых картинок
+    public function countShownPicturesDB ()
     {
-        $selectText = 'SELECT userid, hash FROM user WHERE email = :email';
-        $valuesArray['email'] = $email;
-        if ( !$this->selectDB ( $selectText, $valuesArray ) ) {
-            return TRUE;
-        }
-        //Если в базе такого email нет
-        return FALSE;
+        $dbh = $this->connectDB();
+        $stmt = $dbh->query( 'SELECT count(*) FROM picture p INNER JOIN user u '
+                . 'ON u.UserID=p.UserID AND u.ArtistStatus!="Blocked" '
+                . 'WHERE picturestatus = "Active"' )->fetch();
+        
+        return (int) $stmt['count(*)'];
     }
-    
+
+        //Возвращает все отображаемые на главной странице картины
+    public function getShownPicturesDB ( $from, $number )
+    {
+        $dbh = $this->connectDB();
+        $selectText = 'SELECT p.pictureid, p.previewlink, p.hdlink, '
+                    . 'p.description, p.price FROM picture p INNER JOIN user u '
+                    . 'ON u.UserID=p.UserID AND u.ArtistStatus!="Blocked" '
+                    . 'WHERE picturestatus = "Active" '
+                    . 'ORDER BY publicationdate DESC LIMIT '.$from.', '.$number;
+        $stmt = $dbh->prepare($selectText);
+        $stmt->execute();
+        
+        if ( $arr = $stmt->fetchAll(PDO::FETCH_UNIQUE) ) {
+            foreach ($arr as $key => $value) {
+                $info[$key]['previewLink'] = $value['previewlink'];
+                $info[$key]['hdLink'] = $value['hdlink'];
+                $info[$key]['description'] = $value['description'];
+                $info[$key]['price'] = $value['price'];
+            }
+            $dbh = NULL;
+            return $info;
+        }
+        //Если ничего не найдено
+        return NULL;
+    }
+
     //Регистрирует нового художника
     public function addNewArtistDB ( $name, $email, $hash, $dts)
     {

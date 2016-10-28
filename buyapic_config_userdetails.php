@@ -22,7 +22,7 @@ else if ( isset($_POST['deleteBankAccount']) ){
 }
 else if ( isset($_POST['deleteAvatar']) ){
     $dbConnectionObject->deleteFromUserDB('PhotoLink', $_COOKIE['id']);
-    unlink($_SESSION['pageInfo']['photoLink']);
+    unlink($_SESSION['userInfo']['photoLink']);
 }
 else if ( isset($_POST['changeAvatar']) ){
     include_once 'buyapic_functions.php';
@@ -34,7 +34,7 @@ else if ( isset($_POST['changeAvatar']) ){
             $_SESSION['error']['upload'] = 'Не удалось загрузить файл';
         } else {
             $dbConnectionObject->changeUserDB('PhotoLink', $_COOKIE['id'], $uploadfile);
-            unlink($_SESSION['pageInfo']['photoLink']);
+            unlink($_SESSION['userInfo']['photoLink']);
         }
     }    
 }
@@ -43,7 +43,7 @@ else if ( isset($_POST['changeSelfInfo']) ){
 }
 else if ( isset($_POST['changePassword']) ) {
     include_once 'buyapic_functions.php';
-    $id_hash = $dbConnectionObject->getAuthorizationDataDB ($_SESSION['pageInfo']['email']);
+    $id_hash = $dbConnectionObject->getAuthorizationDataDB ($_SESSION['userInfo']['email']);
     if ( check_password($id_hash['hash'], $_POST['oldPassword']) && 
                     ( $_POST['newPassword'] == $_POST['newPasswordConfirm'] ) )
     {
@@ -57,7 +57,7 @@ else if ( isset($_POST['changePassword']) ) {
 
 unset($_POST);
 unset($_FILES);
-$_SESSION['pageInfo'] = $dbConnectionObject->getUserInfoDB($_COOKIE['id']);
+$_SESSION['userInfo'] = $dbConnectionObject->getUserInfoDB($_COOKIE['id']);
 header('Location: buyapic_index.php?action=config_userdetails');
 ?>
 

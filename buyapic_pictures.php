@@ -41,7 +41,7 @@ else if ( isset($_POST['chooseHD']) ) {
         if (!move_uploaded_file($_FILES['newHD']['tmp_name'], $uploadTMPfile)) {
             $_SESSION['error']['uploadHD'] = 'Не удалось загрузить высокое разрешение';
         } else {
-            $_SESSION['pictureInfo']['HDLink'] = $uploadTMPfile;
+            $_SESSION['pictureInfo']['hdLink'] = $uploadTMPfile;
         }
         unset($_FILES);
     }
@@ -54,7 +54,7 @@ else if ( isset($_POST['addPicture']) ) {
         $_SESSION['pictureInfo']['price'] = round((1.0 * $_POST['price']), 2);
         $_SESSION['pictureInfo']['description'] = $_POST['description'];
         header('Location: buyapic_index.php?action=add_picture');
-    } else if( !isset ($_SESSION['pictureInfo']['HDLink']) ) {
+    } else if( !isset ($_SESSION['pictureInfo']['hdLink']) ) {
         $_SESSION['error']['upload'] = 'Выберите высокое разрешение';
         $_SESSION['pictureInfo']['price'] = round((1.0 * $_POST['price']), 2);
         $_SESSION['pictureInfo']['description'] = $_POST['description'];
@@ -85,7 +85,7 @@ else if ( isset($_POST['addPicture']) ) {
         }
         $previewLink = $previewFolder . '/_' . $dt ;
         
-        $hdFolder = 'uploads/HD/' . $_SESSION['pageInfo']['email'];
+        $hdFolder = 'uploads/HD/' . $_SESSION['userInfo']['email'];
         if ( !is_dir($hdFolder) ) {
             mkdir ($hdFolder);
         }
@@ -93,7 +93,7 @@ else if ( isset($_POST['addPicture']) ) {
         
         if (!rename($_SESSION['pictureInfo']['previewLink'], $previewLink)) {
             $_SESSION['error']['upload'] = 'Не удалось загрузить превью';
-        } else if (!rename($_SESSION['pictureInfo']['HDLink'], $hdLink)) {
+        } else if (!rename($_SESSION['pictureInfo']['hdLink'], $hdLink)) {
             $_SESSION['error']['upload'] = 'Не удалось загрузить высокое разрешение';
         } else {
             $dbConnectionObject->addNewPictureDB ( $_COOKIE['id'], 
@@ -151,7 +151,7 @@ else if ( isset($_POST['changeHD']) )
         $dt = date_create();
         $dts = date_timestamp_get($dt);
         
-        $hdFolder = 'uploads/HD/' . $_SESSION['pageInfo']['email'];
+        $hdFolder = 'uploads/HD/' . $_SESSION['userInfo']['email'];
         if ( !is_dir($hdFolder) ) {
             mkdir ($hdFolder);
         }
@@ -160,11 +160,11 @@ else if ( isset($_POST['changeHD']) )
         if (!move_uploaded_file($_FILES['newHD']['tmp_name'], $hdLink)) {
             $_SESSION['error']['uploadHD'] = 'Не удалось загрузить высокое разрешение';
         } else {
-            unlink($_SESSION['pictureInfo']['HDLink']);
-            $_SESSION['pictureInfo']['HDLink'] = $hdLink;
+            unlink($_SESSION['pictureInfo']['hdLink']);
+            $_SESSION['pictureInfo']['hdLink'] = $hdLink;
             $dbConnectionObject->changePictureDB('hdlink', 
                                     $_SESSION['pictureInfo']['pictureId'], 
-                                    $_SESSION['pictureInfo']['HDLink']);
+                                    $_SESSION['pictureInfo']['hdLink']);
         }
         unset($_FILES);
     }

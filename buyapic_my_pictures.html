@@ -27,6 +27,7 @@
                     <td>Описание</td>
                     <td>Цена</td>
                     <td>Статус</td>
+                    <td>Опубликована</td>
                     <td></td>
                 </tr>
                 <?php 
@@ -36,7 +37,7 @@
                     <td>
                         <div>
                             <a href="buyapic_index.php?action=view_picture&id=<?php echo $id; ?>">
-                                <img src="<?php echo $picture['previewlink']; ?>"
+                                <img src="<?php echo $picture['previewLink']; ?>"
                                      alt="Preview" style="height:64px;">
                             </a>
                         </div>
@@ -45,7 +46,7 @@
                     <td><div><?php echo $picture['price']; ?> р.</div></td>
                     <td>
                         <div>
-                            <?php if ( $picture['picturestatus'] == "Active" ) { ?>
+                            <?php if ( $picture['pictureStatus'] == "Active" ) { ?>
                             <form action="buyapic_pictures.php" method="post">
                                 <input type="hidden" name="pictureId" 
                                        value="<?php echo $id; ?>">
@@ -53,7 +54,7 @@
                                 <input type="radio" name="pictureStatus" value="Deactivated"> Не отображать в поиске<br>
                                 <input type="submit" name="setPictureStatus" value="Подтвердить">
                             </form>
-                            <?php } else if ( $picture['picturestatus'] == "Deactivated") { ?>
+                            <?php } else if ( $picture['pictureStatus'] == "Deactivated") { ?>
                             <form action="buyapic_pictures.php" method="post">
                                 <input type="hidden" name="pictureId" 
                                        value="<?php echo $id; ?>">
@@ -63,7 +64,8 @@
                             </form>
                             <?php } ?>
                         </div>
-                    </td>
+                    </td>                    
+                    <td><div><?php echo date("d.m.y H:i:s", $picture['publicationDate']); ?></div></td>
                     <td>
                         <div>
                             <a href="buyapic_index.php?action=config_picture&id=<?php echo $id; ?>">

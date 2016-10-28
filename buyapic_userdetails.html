@@ -11,15 +11,19 @@
         <?php include 'buyapic_head.html'; ?>
         <div>            
             <div>
+                <?php if ($_SESSION['pageInfo']['userId'] == $_SESSION['userInfo']['userId'] 
+                            && $_SESSION['pageInfo']['status'] == 'Blocked' ) { ?>
+                    <div>Ваш аккаунт заблокирован!</div>
+                <?php } ?>
+                
                 <div>
                     <a href='/buyapic_userdetails.html'>
                         <?php echo $_SESSION['pageInfo']['userName']; ?>
                     </a>
                 </div>
-                
                 <a href="buyapic_userdetails.html">
                     <img src="<?php echo $_SESSION['pageInfo']['photoLink']; ?>" 
-                         alt="Your avatar">
+                         alt="Avatar"  style="max-height:256px;">
                 </a> 
                 
                 <div>
@@ -37,10 +41,12 @@
                             <td>Профиль в соц.сети</td>
                             <td><?php echo $_SESSION['pageInfo']['webPage']; ?></td>
                         </tr>
+                        <?php if ($_SESSION['pageInfo']['userId'] == $_SESSION['userInfo']['userId'] ) { ?>
                         <tr>
                             <td>Номер счета</td>
                             <td><?php echo $_SESSION['pageInfo']['bankAccount']; ?></td>
                         </tr>
+                        <?php } ?>
                         <tr>
                             <td>Зарегистрирован</td>
                             <td><?php echo $_SESSION['pageInfo']['registered']; ?></td>

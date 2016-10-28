@@ -21,13 +21,12 @@ if( isset($_POST['email']) && isset($_POST['password']) )
             setcookie("id", $id_hash['userid']);
             $_SESSION['authorized'] = TRUE;
             unset($_POST);
-            header('Location: buyapic_index.php?action=main');
-//            include 'buyapic_index.php';
+            header('Location: buyapic_index.php');
         } else {
             $_SESSION['error'] = [ 'block'=>'authorization', 
                 'message'=>'Введен неверный пароль для '.$_POST['email'] ];
             unset($_POST);
-//            header('Location: buyapic_index.php?action=authorization');
+            header('Location: buyapic_index.php?action=authorization');
         }
     } else {
         $_SESSION['error'] = [ 'block'=>'authorization', 

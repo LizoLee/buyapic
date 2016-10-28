@@ -31,7 +31,7 @@
                 <div>Превью работы</div>
                 <?php if (isset($_SESSION['pictureInfo']['previewLink'])) { ?>
                 <div><img src="<?php echo $_SESSION['pictureInfo']['previewLink']; ?>" 
-                          alt="Preview"></div>
+                          alt="Preview" style="max-height:512px;"></div>
                 <?php } ?>
                 
                 <?php if (isset($_SESSION['error']['uploadPreview'])) {
@@ -40,7 +40,7 @@
                 
                 <div>
                     <input type="hidden" name="MAX_FILE_SIZE" 
-                           value="30000" />
+                           value="3000000" />
                     <div>
                         Выбрать файл в формате JPEG на компьютере:<br>
                     </div>
@@ -61,10 +61,14 @@
             
             <form enctype="multipart/form-data"
                   action="buyapic_pictures.php" method="post">
-                <div>Высокое разрешение</div>
-                <?php if (isset($_SESSION['pictureInfo']['HDLink'])) { ?>
-                <div><img src="<?php echo $_SESSION['pictureInfo']['HDLink']; ?>" 
-                          alt="Picture"></div>
+                <div>Высокое разрешение (кликните по картинке, чтобы посмотреть)</div>
+                <?php if (isset($_SESSION['pictureInfo']['hdLink'])) { ?>
+                <div>
+                    <a target="_blank" href="<?php echo $_SESSION['pictureInfo']['hdLink']; ?>">
+                       <img src="<?php echo $_SESSION['pictureInfo']['hdLink']; ?>" 
+                          alt="Picture" style="max-height:264px;">
+                    </a>
+                </div>
                 <?php } ?>
                 
                 <?php if (isset($_SESSION['error']['uploadHD'])) {
@@ -73,7 +77,7 @@
                 
                 <div>
                     <input type="hidden" name="MAX_FILE_SIZE" 
-                           value="100000" />
+                           value="30000000" />
                     <div>
                         Выбрать файл на компьютере:<br>
                     </div>

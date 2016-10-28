@@ -9,19 +9,18 @@
         <title>BuyAPic.ru</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!--<link rel="stylesheet" href="styles.css">-->
     </head>
     <body>
         <div>
         <fieldset>
             <legend>
-                <a href="buyapic_index.php?action=main">
+                <a href="buyapic_index.php">
                     <img src="logo.png" alt="logo" 
                          style="width:246px;height:42px;border:0">
                 </a>
             </legend>
             
-            <?php if( $_SESSION['pageInfo']['userName'] == 'anonim' ) { ?>
+            <?php if( $_SESSION['userInfo']['userId'] == 'anonim' ) { ?>
         
             <form action="buyapic_authorization.php" 
                   method="post">
@@ -40,9 +39,9 @@
                 <a href="buyapic_exit.php">Выход</a>
             </div>
             <div>
-                <a href="buyapic_index.php?action=show_userdetails">
+                <a href="buyapic_index.php?action=show_userdetails&id=<?php echo $_SESSION['userInfo']['userId']; ?>">
                     <?php 
-                    echo htmlspecialchars($_SESSION['pageInfo']['userName']); ?>
+                    echo htmlspecialchars($_SESSION['userInfo']['userName']); ?>
                 </a>
                 <a href="buyapic_index.php?action=config_userdetails">Редактировать профиль
                 </a>
@@ -53,6 +52,7 @@
         <?php } ?>
         
         </fieldset>
+        <br>
     </div>
     </body>
 </html>
