@@ -34,7 +34,9 @@ else if ( isset($_POST['changeAvatar']) ) {
             $_SESSION['error']['upload'] = 'Не удалось загрузить файл';
         } else {
             $dbConnectionObject->changeUserDB('PhotoLink', $_COOKIE['id'], $uploadfile);
-            unlink($_SESSION['userInfo']['photoLink']);
+            if ( $_SESSION['userInfo']['photoLink'] != 'uploads/avatar/1.png' ) {
+                unlink($_SESSION['userInfo']['photoLink']);
+            }
         }
     }    
 }
