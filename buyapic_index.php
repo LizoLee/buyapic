@@ -36,13 +36,11 @@ else {
             }
             $_SESSION['pagesAmount'] = $pagesAmount;
             
-            unset($_GET['action']);
             include 'buyapic_main.html';
             break;
         case 'authorization':
             if (!isset($_SESSION['authorized']) ) {
                 $_SESSION['userInfo'] = [ 'userId'=>'anonim' ];
-                unset($_GET['action']);
                 include 'buyapic_authorization.html';
             } else {
                 header('Location: buyapic_index.php?action=main&page=1');
@@ -51,7 +49,6 @@ else {
         case 'registration':
             if (!isset($_SESSION['authorized']) ) {
                 $_SESSION['userInfo'] = [ 'userId'=>'anonim' ];
-                unset($_GET['action']);
                 include 'buyapic_registration.html';
             } else {
                 header('Location: buyapic_index.php?action=main&page=1');
@@ -62,14 +59,12 @@ else {
                 $_SESSION['userInfo'] = [ 'userId'=>'anonim' ];
             }
             $_SESSION['pageInfo'] = $dbConnectionObject->getUserInfoDB($_GET['id']);
-            unset($_GET['action']);
             include 'buyapic_userdetails.html';
             break;
         case 'config_userdetails':
             if (!isset($_SESSION['authorized']) ) {
                 header('Location: buyapic_index.php?action=main&page=1');
             } else {
-                unset($_GET['action']);
                 include 'buyapic_config_userdetails.html';
             }
             break;
@@ -77,7 +72,6 @@ else {
             if (!isset($_SESSION['authorized']) ) {
                 header('Location: buyapic_index.php?action=main&page=1');
             } else {
-                unset($_GET['action']);
                 if ( isset($_SESSION['pictureInfo']['pictureId']) ) {
                     unset($_SESSION['pictureInfo']);
                 }
@@ -91,7 +85,6 @@ else {
             } else {
                 $_SESSION['pictureList'] = $dbConnectionObject->
                         getUserPicturesDB ($_SESSION['userInfo']['userId']);
-                unset($_GET['action']);
                 include 'buyapic_my_pictures.html';
             }
             break;
@@ -100,7 +93,6 @@ else {
                 $_SESSION['userInfo'] = [ 'userId'=>'anonim' ];
             }
             $_SESSION['pictureInfo'] = $dbConnectionObject->getPictureInfoDB ($_GET['id']);
-            unset($_GET['action']);
             include 'buyapic_one_picture.html';
             break;
         case 'config_picture':
@@ -116,7 +108,6 @@ else {
                 }
                 $_SESSION['pictureInfo']['oldPreviewLink'] = $_SESSION['pictureInfo']['previewLink'];
                 $_SESSION['pictureInfo']['oldHDLink'] = $_SESSION['pictureInfo']['hdLink'];
-                unset($_GET['action']);
                 $_SESSION['pictureInfo']['show'] = 'change';
                 include 'buyapic_config_picture.html';
             }
@@ -144,7 +135,6 @@ else {
                     }
                     $_SESSION['pagesAmount'] = $pagesAmount;
 
-                    unset($_GET['action']);
                     include 'buyapic_moderator_artists.html';
                 } else {
                     header('Location: buyapic_index.php?action=main&page=1');
@@ -176,7 +166,6 @@ else {
                     }
                     $_SESSION['pagesAmount'] = $pagesAmount;
 
-                    unset($_GET['action']);
                     include 'buyapic_moderator_pictures.html';
                 } else {
                     header('Location: buyapic_index.php?action=main&page=1');
@@ -208,7 +197,6 @@ else {
                     }
                     $_SESSION['pagesAmount'] = $pagesAmount;
 
-                    unset($_GET['action']);
                     include 'buyapic_moderator_requests.html';
                 } else {
                     header('Location: buyapic_index.php?action=main&page=1');

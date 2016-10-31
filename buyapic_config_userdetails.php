@@ -55,8 +55,6 @@ else if ( isset($_POST['changePassword']) ) {
     }
 }
 
-unset($_POST);
-unset($_FILES);
 $_SESSION['userInfo'] = $dbConnectionObject->getUserInfoDB($_COOKIE['id']);
 header('Location: buyapic_index.php?action=config_userdetails');
 ?>

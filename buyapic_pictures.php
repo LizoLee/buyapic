@@ -28,7 +28,6 @@ else if ( isset($_POST['choosePreview']) ) {
         } else {
             $_SESSION['pictureInfo']['previewLink'] = $uploadTMPfile;
         }
-        unset($_FILES);
     }
     header('Location: buyapic_index.php?action=add_picture');
 }
@@ -48,7 +47,6 @@ else if ( isset($_POST['chooseHD']) ) {
         } else {
             $_SESSION['pictureInfo']['hdLink'] = $uploadTMPfile;
         }
-        unset($_FILES);
     }
     header('Location: buyapic_index.php?action=add_picture');
 }
@@ -142,7 +140,6 @@ else if ( isset($_POST['changePreview']) )
                                     $_SESSION['pictureInfo']['pictureId'], 
                                     $_SESSION['pictureInfo']['previewLink']);
         }
-        unset($_FILES);
     }
     header('Location: buyapic_index.php?action=config_picture');
 }
@@ -166,7 +163,6 @@ else if ( isset($_POST['changeHD']) )
                                     $_SESSION['pictureInfo']['pictureId'], 
                                     $_SESSION['pictureInfo']['hdLink']);
         }
-        unset($_FILES);
     }
     header('Location: buyapic_index.php?action=config_picture');
 }

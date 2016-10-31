@@ -1,4 +1,5 @@
 <?php
+//Файл функций, не обращающихся к БД
 
 //Проверка пароля
 function check_password ( $hash, $password ) {  

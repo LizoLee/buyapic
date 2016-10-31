@@ -4,8 +4,6 @@
 include_once 'buyapic_header.php';
 
 session_unset();
-unset($_GET);
-unset($_POST);
 
 $tmpFolder = 'uploads/tmp/' . $_COOKIE['id'];
 if ( is_dir($tmpFolder) ) {
