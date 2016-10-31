@@ -168,12 +168,13 @@ else if ( isset($_POST['changeHD']) )
 }
 else if ( isset($_POST['changePrice']) )
 {
-    if ( $_POST['price'] == 0) {
+    if ( isset($_POST['price']) && $_POST['price'] == 0) {
         if( !isset($_SESSION['error']['checkPrice'])) {
             $_SESSION['error']['checkPrice'] = 'Вы указали цену равной нулю.<br>'
                 . 'Хотите ли Вы, чтобы Ваша работа распространялась бесплатно?';
-            $_SESSION['pictureInfo']['price'] = 0;
         }
+        $_SESSION['pictureInfo']['price'] = 0;
+        include 'buyapic_config_picture.html';
     } else {
         unset($_SESSION['error']['checkPrice']);
         
@@ -183,7 +184,8 @@ else if ( isset($_POST['changePrice']) )
         $dbConnectionObject->changePictureDB('price', 
                                     $_SESSION['pictureInfo']['pictureId'], 
                                     $_SESSION['pictureInfo']['price']);
-
+        echo "<pre>";
+        var_dump($_SESSION);
         header('Location: buyapic_index.php?action=config_picture');
     }
 }

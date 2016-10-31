@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!--Форма добавления или редактирования работы 
+        (в зависимости от значения $_SESSION['pictureInfo']['show'])-->
         <title>Редактирование работы</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +11,7 @@
     <body>
         <?php include 'buyapic_head.html'; ?>
         <div>
+            <!--Если пользователь указал цену равной нулю, запрашивается подтверждение-->
             <?php if (isset($_SESSION['error']['checkPrice'])) { ?>
             <div><?php echo $_SESSION['error']['checkPrice']; ?></div>
             <form action="buyapic_pictures.php" method="post">
@@ -25,6 +28,7 @@
             <br>
             <?php } else { ?>
             
+            <!--Форма загрузки/изменения превью-->
             <form enctype="multipart/form-data"
                   action="buyapic_pictures.php" method="post">
 
@@ -59,6 +63,7 @@
             
             <br>
             
+            <!--Форма загрузки/изменения высокого разрешения-->
             <form enctype="multipart/form-data"
                   action="buyapic_pictures.php" method="post">
                 <div>Высокое разрешение (кликните по картинке, чтобы посмотреть)</div>
@@ -96,6 +101,7 @@
                 
             <br>
             
+            <!--Форма назначения/изменения цены и описания работы-->
             <form action="buyapic_pictures.php" method="post">
                 <div>
                     <div>Цена (в рублях):</div>

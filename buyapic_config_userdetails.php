@@ -3,6 +3,7 @@
 
 include_once 'buyapic_header.php';
 
+//Изменение основных настроек (имя, профиль в соц.сети, номер счета)
 if ( isset($_POST['changeBasic']) ) {
     if ( $_POST['userName'] != "" ) {
         $dbConnectionObject->changeUserDB('Name', $_COOKIE['id'], $_POST['userName']);
@@ -20,13 +21,10 @@ else if ( isset($_POST['deleteWebPage']) ) {
 else if ( isset($_POST['deleteBankAccount']) ) {
     $dbConnectionObject->deleteFromUserDB('BankAccount',$_COOKIE['id']);
 }
-else if ( isset($_POST['deleteAvatar']) ) {
-    $dbConnectionObject->deleteFromUserDB('PhotoLink', $_COOKIE['id']);
-    unlink($_SESSION['userInfo']['photoLink']);
-}
+//Изменение фотографии пользователя
 else if ( isset($_POST['changeAvatar']) ) {
     include_once 'buyapic_functions.php';
-    if ( !($_SESSION['error']['upload']=checkUploadPicture('newAvatar')) ) {
+    if ( !($_SESSION['error']['upload'] = checkUploadPicture('newAvatar')) ) {
         unset($_SESSION['error']['upload']);
         $dt = date("Y-m-d_H-i-s");
         $uploadfile = 'uploads/avatars/' . $_COOKIE['id'] . '_avatar_' . $dt ;
@@ -39,6 +37,10 @@ else if ( isset($_POST['changeAvatar']) ) {
             }
         }
     }    
+}
+else if ( isset($_POST['deleteAvatar']) ) {
+    $dbConnectionObject->deleteFromUserDB('PhotoLink', $_COOKIE['id']);
+    unlink($_SESSION['userInfo']['photoLink']);
 }
 else if ( isset($_POST['changeSelfInfo']) ) {
     $dbConnectionObject->changeUserDB('SelfInfo', $_COOKIE['id'], trim($_POST['selfInfo']));
