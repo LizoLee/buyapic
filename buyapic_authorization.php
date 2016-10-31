@@ -16,7 +16,6 @@ if( isset($_POST['email']) && isset($_POST['password']) )
     //Получаем id пользователя и хеш пароля из БД (если имя есть в БД)
     else if( $id_hash = $dbConnectionObject->getAuthorizationDataDB ($_POST['email']) )
     {
-    //Получаем id пользователя и хеш пароля из БД (если имя есть в БД)
         include_once 'buyapic_functions.php';
         //Проверка пароля
         if ( check_password($id_hash['hash'], $_POST['password']) ) {
