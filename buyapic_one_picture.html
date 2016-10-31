@@ -27,7 +27,11 @@
             </div>
             
             <br>
-            <div><span><?php echo $_SESSION['pictureInfo']['description']; ?></span></div>
+            <div>
+                <span>
+                    <?php echo htmlspecialchars($_SESSION['pictureInfo']['description']); ?>
+                </span>
+            </div>
             
             <br>
             <?php if ( $_SESSION['pictureInfo']['price'] == 0 ) { ?>

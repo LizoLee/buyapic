@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Список работ <?php echo $_SESSION['userInfo']['userName']; ?></title>
+        <title>Список работ <?php echo htmlspecialchars($_SESSION['userInfo']['userName']); ?></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
@@ -42,7 +42,7 @@
                             </a>
                         </div>
                     </td>
-                    <td><div><?php echo $picture['description']; ?></div></td>
+                    <td><div><?php echo htmlspecialchars($picture['description']); ?></div></td>
                     <td><div><?php echo $picture['price']; ?> р.</div></td>
                     <td>
                         <div>

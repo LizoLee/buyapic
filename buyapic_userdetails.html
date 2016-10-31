@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Пользователь <?php echo $_SESSION['pageInfo']['userName']; ?> на BuyAPic.ru</title>
+        <title>Пользователь <?php echo htmlspecialchars($_SESSION['pageInfo']['userName']); ?> на BuyAPic.ru</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
@@ -24,7 +24,7 @@
                 <div style="float: right">
                     <form action="buyapic_moderator.php" method="post">
                         <input type="hidden" name="artistId" 
-                               value="<?php echo $id; ?>">
+                               value="<?php echo $_SESSION['pageInfo']['userId']; ?>">
                         
                         <?php if ( $_SESSION['pageInfo']['status'] == "Active" ) { ?>
                         <div>Активен</div>
@@ -44,7 +44,7 @@
                 
                 <div>
                     <a href='/buyapic_userdetails.html'>
-                        <?php echo $_SESSION['pageInfo']['userName']; ?>
+                        <?php echo htmlspecialchars($_SESSION['pageInfo']['userName']); ?>
                     </a>
                 </div>
                 <a href="buyapic_userdetails.html">
@@ -61,17 +61,17 @@
                         <tr>
                             <td>Обо мне</td>
                             <td style="max-width: 200px">
-                                <?php echo $_SESSION['pageInfo']['selfInfo']; ?>
+                                <?php echo htmlspecialchars($_SESSION['pageInfo']['selfInfo']); ?>
                             </td>
                         </tr>
                         <tr>
                             <td>Профиль в соц.сети</td>
-                            <td><?php echo $_SESSION['pageInfo']['webPage']; ?></td>
+                            <td><?php echo htmlspecialchars($_SESSION['pageInfo']['webPage']); ?></td>
                         </tr>
                         <?php if ($_SESSION['pageInfo']['userId'] == $_SESSION['userInfo']['userId'] ) { ?>
                         <tr>
                             <td>Номер счета</td>
-                            <td><?php echo $_SESSION['pageInfo']['bankAccount']; ?></td>
+                            <td><?php echo htmlspecialchars($_SESSION['pageInfo']['bankAccount']); ?></td>
                         </tr>
                         <?php } ?>
                         <tr>

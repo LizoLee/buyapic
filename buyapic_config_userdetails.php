@@ -3,28 +3,28 @@
 
 include_once 'buyapic_header.php';
 
-if ( isset($_POST['changeBasic']) ){
-    if ( $_POST['userName'] != "" ){
+if ( isset($_POST['changeBasic']) ) {
+    if ( $_POST['userName'] != "" ) {
         $dbConnectionObject->changeUserDB('Name', $_COOKIE['id'], $_POST['userName']);
     }
-    if ( $_POST['webPage'] != "" ){
+    if ( $_POST['webPage'] != "" ) {
         $dbConnectionObject->changeUserDB('WebPage', $_COOKIE['id'], $_POST['webPage']);
     }
-    if ( $_POST['bankAccount'] != "" ){
+    if ( $_POST['bankAccount'] != "" ) {
         $dbConnectionObject->changeUserDB('BankAccount', $_COOKIE['id'], $_POST['bankAccount']);
     }
 }
-else if ( isset($_POST['deleteWebPage']) ){
+else if ( isset($_POST['deleteWebPage']) ) {
     $dbConnectionObject->deleteFromUserDB('WebPage', $_COOKIE['id']);
 }
-else if ( isset($_POST['deleteBankAccount']) ){
+else if ( isset($_POST['deleteBankAccount']) ) {
     $dbConnectionObject->deleteFromUserDB('BankAccount',$_COOKIE['id']);
 }
-else if ( isset($_POST['deleteAvatar']) ){
+else if ( isset($_POST['deleteAvatar']) ) {
     $dbConnectionObject->deleteFromUserDB('PhotoLink', $_COOKIE['id']);
     unlink($_SESSION['userInfo']['photoLink']);
 }
-else if ( isset($_POST['changeAvatar']) ){
+else if ( isset($_POST['changeAvatar']) ) {
     include_once 'buyapic_functions.php';
     if ( !($_SESSION['error']['upload']=checkUploadPicture('newAvatar')) ) {
         unset($_SESSION['error']['upload']);
@@ -38,7 +38,7 @@ else if ( isset($_POST['changeAvatar']) ){
         }
     }    
 }
-else if ( isset($_POST['changeSelfInfo']) ){
+else if ( isset($_POST['changeSelfInfo']) ) {
     $dbConnectionObject->changeUserDB('SelfInfo', $_COOKIE['id'], trim($_POST['selfInfo']));
 }
 else if ( isset($_POST['changePassword']) ) {

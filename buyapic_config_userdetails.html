@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Конфигурация профиля <?php echo $_SESSION['userInfo']['userName']; ?> на BuyAPic.ru</title>
+        <title>Конфигурация профиля <?php echo htmlspecialchars($_SESSION['userInfo']['userName']); ?> на BuyAPic.ru</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!--<link rel="stylesheet" href="styles.css">-->
@@ -20,7 +20,7 @@
                             <td>
                                 <input type="text" name="userName" 
                                        placeholder=
-                            "<?php echo $_SESSION['userInfo']['userName']; ?>">
+                            "<?php echo htmlspecialchars($_SESSION['userInfo']['userName']); ?>">
                             </td>
                             <td></td>
                         </tr>
@@ -29,7 +29,7 @@
                             <td>
                                 <input type="text" name="webPage" 
                                        placeholder=
-                            "<?php echo $_SESSION['userInfo']['webPage']; ?>">
+                            "<?php echo htmlspecialchars($_SESSION['userInfo']['webPage']); ?>">
                             </td>
                             <td>
                                 <input type="submit" name="deleteWebPage"
@@ -41,7 +41,7 @@
                             <td>
                                 <input type="text" name="bankAccount" 
                                        placeholder=
-                         "<?php echo $_SESSION['userInfo']['bankAccount']; ?>" >
+                         "<?php echo htmlspecialchars($_SESSION['userInfo']['bankAccount']); ?>" >
                             </td>
                             <td>
                                 <input type="submit" name="deleteBankAccount"
@@ -94,7 +94,7 @@
                     </div>
                     <div>
                         <textarea name="selfInfo" cols="40" rows="18"><?php 
-                            echo $_SESSION['userInfo']['selfInfo']; 
+                            echo htmlspecialchars($_SESSION['userInfo']['selfInfo']); 
                         ?></textarea>
                     </div>
                     <input type="submit" name="changeSelfInfo"

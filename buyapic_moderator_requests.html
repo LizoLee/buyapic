@@ -78,7 +78,7 @@
                     <td>
                         <div>
                             <a href="buyapic_index.php?action=show_userdetails&id=<?php echo $request['artistId']; ?>">
-                                <?php echo $request['artistName']; ?>
+                                <?php echo htmlspecialchars($request['artistName']); ?>
                             </a>
                         </div>
                     </td>

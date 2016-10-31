@@ -89,8 +89,8 @@
                             </form>
                         </div>
                     </td>
-                    <td><div><?php echo $artist['bankAccount']; ?></div></td>
-                    <td><div><?php echo $artist['webPage']; ?></div></td>
+                    <td><div><?php echo htmlspecialchars($artist['bankAccount']); ?></div></td>
+                    <td><div><?php echo htmlspecialchars($artist['webPage']); ?></div></td>
                     <td>
                         <div>
                             <?php echo htmlspecialchars((strlen($artist['selfInfo']) > 60) ? 
