@@ -1,0 +1,108 @@
+<?php if ( !session_id() ) { session_start(); } ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Список заявок</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            td, th {
+                max-width: 200px;
+                padding: 8px;
+            }
+            tr:nth-child(even) {
+                background-color: gainsboro;
+            }
+            td.Paid {
+                    background-color: lightgreen
+            }
+            td.NotPaid {
+                    background-color: lightcoral
+            }
+        </style>
+    </head>
+    <body>
+        <?php include 'buyapic_head.html'; ?>
+        <div>
+            
+            <div>
+            <?php for($page=1;$page<=$_SESSION['pagesAmount'];$page++) { ?>
+                <a href="buyapic_index.php?action=show_pictures&page=<?php echo $page; ?>">
+                    <?php echo "$page"; ?>
+                </a>
+            <?php } ?>
+            </div>
+
+            <br>
+        
+            <table>
+                <tr>
+                    <td>Покупатель</td>
+                    <td>Работа</td>
+                    <td>Цена</td>
+                    <td>Художник</td>
+                    <td>Дата</td>
+                    <td>Статус оплаты</td>
+                </tr>
+                <?php 
+                if(isset($_SESSION['requestList'])) { 
+                     foreach ($_SESSION['requestList'] as $id => $request) { ?>
+                <tr>
+                    <td>
+                        <?php if ( $request['buyerAccessLevel'] != 'Buyer' ) { ?>
+                        <div>
+                            <a href="buyapic_index.php?action=show_userdetails&id=<?php echo $request['buyerId']; ?>">
+                                <?php echo $request['buyerEmail']; ?>
+                            </a>
+                        </div>
+                        <?php } else { ?>
+                        <div>
+                            <?php echo $request['buyerEmail']; ?>
+                        </div>
+                        <?php } ?>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="buyapic_index.php?action=view_picture&id=<?php echo $request['pictureId']; ?>">
+                                <img src="<?php echo $request['previewLink']; ?>"
+                                     alt="Preview" style="height:32px;">
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                    <td><div><?php echo $request['price']; ?> р.</div></td>
+                    <td>
+                        <div>
+                            <a href="buyapic_index.php?action=show_userdetails&id=<?php echo $request['artistId']; ?>">
+                                <?php echo $request['artistName']; ?>
+                            </a>
+                        </div>
+                    </td>
+                    
+                    <td><div><?php echo date("d.m.y H:i:s", $request['requestDate']); ?></div></td>
+                    
+                    <?php if ( $request['buyingStatus'] == 'NotPaid' ) { ?>
+                    <td style="background-color: lightcoral">
+                        <div>
+                            <form action="buyapic_moderator.php" method="post">
+                                <input type="hidden" name="requestId" 
+                                       value="<?php echo $id; ?>">
+                                <input type="submit" name="requestPaid" value="Оплачено">
+                            </form>
+                        </div>
+                    </td>
+                    <?php } else { ?>
+                    <td style="background-color: lightgreen">
+                        <div>Оплачено</div>
+                    </td>
+                    <?php } ?>
+                </tr>
+                <?php } } ?>
+            </table>
+        </div>
+    </body>
+</html>

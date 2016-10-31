@@ -34,7 +34,15 @@
             </form>
         
             <?php } else { ?>
-        
+            
+            <?php if ( $_SESSION['userInfo']['accessLevel'] == 'Moderator' ) { ?>
+            <div>
+                <a href="buyapic_index.php?action=show_users">Художники</a>
+                <a href="buyapic_index.php?action=show_pictures">Работы</a>
+                <a href="buyapic_index.php?action=show_requests">Заявки</a>
+            </div>
+            <?php } ?>
+            
             <div style="float: right">
                 <a href="buyapic_exit.php">Выход</a>
             </div>
@@ -43,10 +51,17 @@
                     <?php 
                     echo htmlspecialchars($_SESSION['userInfo']['userName']); ?>
                 </a>
-                <a href="buyapic_index.php?action=config_userdetails">Редактировать профиль
+                <a href="buyapic_index.php?action=config_userdetails">
+                    Редактировать профиль
                 </a>
                 <a href="buyapic_index.php?action=show_my_pictures">Мои работы</a>
-                <a href="buyapic_index.php?action=add_picture">Опубликовать новую работу</a>
+                
+                <?php if ( $_SESSION['userInfo']['status'] == 'Active' ) { ?>
+                    <a href="buyapic_index.php?action=add_picture">
+                        Опубликовать новую работу
+                    </a>
+                <?php } ?>
+                
             </div>
         
         <?php } ?>

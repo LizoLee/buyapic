@@ -5,6 +5,11 @@
         <title>Детальная страница работы</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            td {
+                vertical-align: top
+            }
+        </style>
     </head>
     <body>
         <?php include 'buyapic_head.html'; ?>
@@ -35,6 +40,29 @@
                 <div>
                     <span>Цена: <?php echo $_SESSION['pictureInfo']['price']; ?> р.</span>
                 </div>
+                <div>Купить</div>
+                <?php if ( isset($_SESSION['error']['message']) ) { ?>
+                <h4>
+                    <?php
+                    echo htmlspecialchars($_SESSION['error']['message']);
+                    unset($_SESSION['error']);
+                    ?>
+                </h4>
+                <?php } ?>
+                <form action="buyapic_pictures.php" 
+                      method="post">
+                    <input type="hidden" name="pictureId" 
+                                       value="<?php echo $_SESSION['pictureInfo']['pictureId']; ?>">
+                    <?php if( $_SESSION['userInfo']['userId'] == 'anonim' ) { ?>
+                    <input type="email" name="email" placeholder="Email"
+                           required="required" />
+                    <?php } else { ?>
+                    <input type="email" name="email" 
+                           value="<?php echo $_SESSION['userInfo']['email']; ?>"
+                           required="required" />
+                    <?php } ?>
+                    <input type="submit" name="request" value="Подать заявку"/>
+                </form>
             <?php } ?>
             
             <?php if($_SESSION['pictureInfo']['pictureStatus'] == 'Deactivated' ) { ?>
@@ -43,7 +71,11 @@
             <?php } ?>
             
             <br>
-            <div><span>Опубликована <?php echo date("d.m.y", $_SESSION['pictureInfo']['publicationDate']); ?></span></div>
+            <div>
+                <span>
+                    Опубликована <?php echo date("d.m.y", $_SESSION['pictureInfo']['publicationDate']); ?>
+                </span>
+            </div>
         </div>
     </body>
 </html>

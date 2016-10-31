@@ -5,7 +5,7 @@ include_once 'buyapic_header.php';
 
 if( isset($_POST['email']) && isset($_POST['password']) )
 {
-    //Получаем id пользователя и хеш пароля из БД (если имя есть в БД)
+    //Проверяем корректность email
     if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
     {
         $_SESSION['error'] = [ 'block'=>'authorization', 
@@ -13,12 +13,14 @@ if( isset($_POST['email']) && isset($_POST['password']) )
         unset($_POST);
         header('Location: buyapic_index.php?action=authorization');
     }
+    //Получаем id пользователя и хеш пароля из БД (если имя есть в БД)
     else if( $id_hash = $dbConnectionObject->getAuthorizationDataDB ($_POST['email']) )
     {
+    //Получаем id пользователя и хеш пароля из БД (если имя есть в БД)
         include_once 'buyapic_functions.php';
         //Проверка пароля
         if ( check_password($id_hash['hash'], $_POST['password']) ) {
-            setcookie("id", $id_hash['userid']);
+            setcookie("id", $id_hash['userId']);
             $_SESSION['authorized'] = TRUE;
             unset($_POST);
             header('Location: buyapic_index.php');

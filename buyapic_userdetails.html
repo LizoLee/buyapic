@@ -5,7 +5,11 @@
         <title>Пользователь <?php echo $_SESSION['pageInfo']['userName']; ?> на BuyAPic.ru</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!--<link rel="stylesheet" href="styles.css">-->
+        <style>
+            td {
+                vertical-align: top
+            }
+        </style>
     </head>
     <body>
         <?php include 'buyapic_head.html'; ?>
@@ -14,6 +18,28 @@
                 <?php if ($_SESSION['pageInfo']['userId'] == $_SESSION['userInfo']['userId'] 
                             && $_SESSION['pageInfo']['status'] == 'Blocked' ) { ?>
                     <div>Ваш аккаунт заблокирован!</div>
+                <?php } ?>
+                
+                <?php if ($_SESSION['userInfo']['accessLevel'] == 'Moderator' ) { ?>
+                <div style="float: right">
+                    <form action="buyapic_moderator.php" method="post">
+                        <input type="hidden" name="artistId" 
+                               value="<?php echo $id; ?>">
+                        
+                        <?php if ( $_SESSION['pageInfo']['status'] == "Active" ) { ?>
+                        <div>Активен</div>
+                        <input type="submit" name="blockArtist" value="Заблокировать">
+                        
+                        <?php } else if ( $_SESSION['pageInfo']['status'] == "Blocked" ) { ?>
+                        <div>Заблокирован</div>
+                        <input type="submit" name="activateArtist" value="Активировать">
+                        
+                        <?php } else if ( $_SESSION['pageInfo']['status'] == "Awaiting" ) { ?>
+                        <div>Ожидает модерации</div>
+                        <input type="submit" name="activateArtist" value="Активировать">
+                    </form>
+                    <?php } ?>
+                </div>
                 <?php } ?>
                 
                 <div>
@@ -34,7 +60,8 @@
                         </tr>
                         <tr>
                             <td>Обо мне</td>
-                            <td><?php echo $_SESSION['pageInfo']['selfInfo']; ?>
+                            <td style="max-width: 200px">
+                                <?php echo $_SESSION['pageInfo']['selfInfo']; ?>
                             </td>
                         </tr>
                         <tr>

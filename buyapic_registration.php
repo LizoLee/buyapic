@@ -9,15 +9,12 @@ include_once 'buyapic_header.php';
 if ( !filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL) ) {
     $_SESSION['error'] = [ 'block'=>'registration', 
                 'message'=>'Введен некорректный email' ];
-//    foreach ( $_POST as $key => $value )
-//    {
-//        $_SESSION['error']['autocomplete'][$key]=$value;
-//    }
     unset($_POST);
     header('Location: buyapic_index.php?action=registration');
 }
 //Исключение уже используемого email
-else if( !$dbConnectionObject->isEmailAvailableDB($_POST['email']) ) {
+else if( $dbConnectionObject->isEmailAvailableDB($_POST['email']) == 'Artist'
+        || $dbConnectionObject->isEmailAvailableDB($_POST['email']) == 'Moderator') {
     $_SESSION['error'] = [ 'block'=>'registration', 
                 'message'=>'Указанный email уже используется' ];
     unset($_POST);
@@ -37,8 +34,8 @@ else {
     $dt = date_create();
     $dts = date_timestamp_get($dt);
     $dbConnectionObject ->addNewArtistDB( $_POST['newUsername'], $_POST['email'], $hash, $dts );
-    $id_hash = $dbConnectionObject->getAuthorizationDataDB ($_POST['email']);
-    if(setcookie("id", $id_hash['userid'])) {
+    if( $id_hash = $dbConnectionObject->getAuthorizationDataDB ($_POST['email']) ) {
+        setcookie("id", $id_hash['userId']);
         $_SESSION['authorized'] = TRUE;
         unset($_POST);
         header('Location: buyapic_index.php');

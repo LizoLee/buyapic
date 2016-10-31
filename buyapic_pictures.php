@@ -1,13 +1,8 @@
 <?php
-//Логика работы с картинами художника===========================================
+//Логика работы с картинrами====================================================
 
 include_once 'buyapic_header.php';
 include_once 'buyapic_functions.php';
-    
-$tmpFolder = 'uploads/tmp/' . $_COOKIE['id'];
-if ( !is_dir($tmpFolder) ) {
-    mkdir ($tmpFolder);
-}
 
 if ( isset($_POST['notForFree']) ) {
     unset($_SESSION['error']['checkPrice']);
@@ -19,6 +14,11 @@ if ( isset($_POST['notForFree']) ) {
 } 
 else if ( isset($_POST['choosePreview']) ) {
 
+    $tmpFolder = 'uploads/tmp/' . $_COOKIE['id'];
+    if ( !is_dir($tmpFolder) ) {
+        mkdir ($tmpFolder);
+    }
+    
     if ( !($_SESSION['error']['uploadPreview']=checkUploadPicture('newPreview')) ) {
         unset($_SESSION['error']['uploadPreview']);
         $dt = date("Y-m-d_H-i-s");
@@ -33,7 +33,12 @@ else if ( isset($_POST['choosePreview']) ) {
     header('Location: buyapic_index.php?action=add_picture');
 }
 else if ( isset($_POST['chooseHD']) ) {
-
+    
+    $tmpFolder = 'uploads/tmp/' . $_COOKIE['id'];
+    if ( !is_dir($tmpFolder) ) {
+        mkdir ($tmpFolder);
+    }
+    
     if ( !($_SESSION['error']['uploadHD']=checkUploadPicture('newHD')) ) {
         unset($_SESSION['error']['uploadHD']);
         $dt = date("Y-m-d_H-i-s");
@@ -104,6 +109,7 @@ else if ( isset($_POST['addPicture']) ) {
                                         $_SESSION['pictureInfo']['price'] );
 
             unset ($_SESSION['pictureInfo']);
+            $tmpFolder = 'uploads/tmp/' . $_COOKIE['id'];
             deleteFolder($tmpFolder);
             header('Location: buyapic_index.php?action=show_my_pictures');
         }
@@ -125,9 +131,6 @@ else if ( isset($_POST['changePreview']) )
         $dt = date("Y-m-d_H-i-s", $dts);
         
         $previewFolder = 'uploads/preview/' . $_COOKIE['id'];
-        if ( !is_dir($previewFolder) ) {
-            mkdir ($previewFolder);
-        }
         $previewLink = $previewFolder . '/_' . $dt ;
         
         if (!move_uploaded_file($_FILES['newPreview']['tmp_name'], $previewLink)) {
@@ -152,9 +155,6 @@ else if ( isset($_POST['changeHD']) )
         $dts = date_timestamp_get($dt);
         
         $hdFolder = 'uploads/HD/' . $_SESSION['userInfo']['email'];
-        if ( !is_dir($hdFolder) ) {
-            mkdir ($hdFolder);
-        }
         $hdLink = $hdFolder . '/_' . $dts ;
         
         if (!move_uploaded_file($_FILES['newHD']['tmp_name'], $hdLink)) {
@@ -188,7 +188,7 @@ else if ( isset($_POST['changePrice']) )
                                     $_SESSION['pictureInfo']['pictureId'], 
                                     $_SESSION['pictureInfo']['price']);
 
-//        header('Location: buyapic_index.php?action=config_picture');
+        header('Location: buyapic_index.php?action=config_picture');
     }
 }
 else if ( isset($_POST['changeDescription']) )
@@ -199,5 +199,74 @@ else if ( isset($_POST['changeDescription']) )
                                     $_SESSION['pictureInfo']['description']);
 
         header('Location: buyapic_index.php?action=config_picture');
+}
+else if ( isset($_POST['request']) )
+{
+    //Проверяем корректность email
+    if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
+    {
+        $_SESSION['error'] = [ 'block'=>'request', 
+                'message'=>'Введен некорректный email' ];
+    }
+    else if( $_SESSION['userInfo']['userId'] == 'anonim') {
+        //Исключение использования чужого email неавторизованным пользователем
+        if ( $dbConnectionObject->isEmailAvailableDB($_POST['email']) == 'Artist'
+              || $dbConnectionObject->isEmailAvailableDB($_POST['email']) == 'Moderator' ) 
+            {
+            $_SESSION['error'] = [ 'block'=>'request', 
+                        'message'=>'Указанный email зарегистрирован, пройдите авторизацию' ];
+        }
+        else if ( $dbConnectionObject->isEmailAvailableDB($_POST['email']) == 'Buyer') 
+        {
+            $buyer = $dbConnectionObject->getAuthorizationDataDB ($_POST['email']);
+            //Исключение повторения заявки
+            if ( $dbConnectionObject->checkRequestDB ($buyer['userId'], 
+                                        $_SESSION['pictureInfo']['pictureId']) )
+            {
+                $_SESSION['error'] = [ 'block'=>'request', 
+                            'message'=>'Вы уже подали заявку на покупку этой работы' ];
+            }
+            else {
+                $dt = date_create();
+                $dts = date_timestamp_get($dt);
+                $dbConnectionObject->addNewRequestDB ( $buyer['userId'], 
+                                $_SESSION['pictureInfo']['pictureId'], $dts );
+            }
+        }
+        else if ( $dbConnectionObject->isEmailAvailableDB($_POST['email']) == NULL) 
+        {
+            $dt = date_create();
+            $dts = date_timestamp_get($dt);
+            $dbConnectionObject->addNewBuyerDB ($_POST['email'], $dts);
+            $buyer = $dbConnectionObject->getAuthorizationDataDB ($_POST['email']);
+            $dbConnectionObject->addNewRequestDB ( $buyer['userId'], 
+                                    $_SESSION['pictureInfo']['pictureId'], $dts );
+        }
+    }
+    else if ( $_SESSION['userInfo']['userId'] != 'anonim' ) {
+        //Исключение использования чужого email авторизованным пользователем
+        if( $_SESSION['userInfo']['email'] != $_POST['email'] ) 
+        {
+            $_SESSION['error'] = [ 'block'=>'request', 
+                        'message'=>'Вы прошли авторизацию под другим email' ];
+        }
+        else
+        {
+            //Исключение повторения заявки
+            if ( $dbConnectionObject->checkRequestDB ($_SESSION['userInfo']['userId'], 
+                                        $_SESSION['pictureInfo']['pictureId']) )
+            {
+                $_SESSION['error'] = [ 'block'=>'request', 
+                            'message'=>'Вы уже подали заявку на покупку этой работы' ];
+            }
+            else {
+                $dt = date_create();
+                $dts = date_timestamp_get($dt);
+                $dbConnectionObject->addNewRequestDB ( $_SESSION['userInfo']['userId'], 
+                                $_SESSION['pictureInfo']['pictureId'], $dts );
+            }
+        }
+    }
+    header('Location: '.$_SERVER["HTTP_REFERER"]);
 }
 ?>

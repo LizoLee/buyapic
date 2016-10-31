@@ -1,0 +1,106 @@
+<?php if ( !session_id() ) { session_start(); } ?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Список художников</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            td, th {
+                max-width: 200px;
+                padding: 8px;
+            }
+            tr:nth-child(even) {
+                background-color: gainsboro;
+            }
+            td.Blocked {
+                    background-color: lightcoral
+            }
+            td.Awaiting {
+                    background-color: lightyellow
+            }
+            td.Active {
+                    background-color: lightgreen
+            }
+        </style>
+    </head>
+    <body>
+        <?php include 'buyapic_head.html'; ?>
+        <div>
+            
+            <div>
+            <?php for($page=1;$page<=$_SESSION['pagesAmount'];$page++) { ?>
+                <a href="buyapic_index.php?action=show_users&page=<?php echo $page; ?>">
+                    <?php echo "$page"; ?>
+                </a>
+            <?php } ?>
+            </div>
+
+            <br>
+        
+            <table>
+                <tr>
+                    <td>Фото</td>
+                    <td>Email</td>
+                    <td>Имя</td>
+                    <td>Зарегистрирован</td>
+                    <td>Статус</td>
+                    <td>Номер счета</td>
+                    <td>Соц.сеть</td>
+                    <td>Информация</td>
+                </tr>
+                <?php
+                if(isset($_SESSION['artistList'])) { 
+                     foreach ($_SESSION['artistList'] as $id => $artist) { ?>
+                <tr>
+                    <td>
+                        <div>
+                            <a href="buyapic_index.php?action=show_userdetails&id=<?php echo $id; ?>">
+                                <img src="<?php echo $artist['photoLink']; ?>"
+                                     alt="Avatar" style="height:32px;">
+                            </a>
+                        </div>
+                    </td>
+                    <td><div><?php echo $artist['email']; ?></div></td>
+                    <td><div><?php echo htmlspecialchars($artist['userName']); ?></div></td>
+                    <td><div><?php echo date("d.m.y H:i:s", $artist['registered']); ?></div></td>
+                    <td class="<?php echo $artist['status']; ?>">
+                        <div>
+                            <form action="buyapic_moderator.php" method="post">
+                                <input type="hidden" name="artistId" 
+                                       value="<?php echo $id; ?>">
+
+                                <?php if ( $artist['status'] == "Active" ) { ?>
+                                <div style="background-color: lightgreen">Активен</div>
+                                <input type="submit" name="blockArtist" value="Заблокировать">
+
+                                <?php } else if ( $artist['status'] == "Blocked" ) { ?>
+                                <div style="background-color: lightcoral">Заблокирован</div>
+                                <input type="submit" name="activateArtist" value="Активировать">
+
+                                <?php } else if ( $artist['status'] == "Awaiting" ) { ?>
+                                <div style="background-color: lightyellow">Ожидает модерации</div>
+                                <input type="submit" name="activateArtist" value="Активировать">
+                                <?php } ?>
+                            </form>
+                        </div>
+                    </td>
+                    <td><div><?php echo $artist['bankAccount']; ?></div></td>
+                    <td><div><?php echo $artist['webPage']; ?></div></td>
+                    <td>
+                        <div>
+                            <?php echo htmlspecialchars((strlen($artist['selfInfo']) > 60) ? 
+                                    mb_substr($artist['selfInfo'], 0, 60).' ...' :
+                                    $artist['selfInfo']); ?>
+                        </div>
+                    </td>
+                </tr>
+                <?php } } ?>
+            </table>
+        </div>
+    </body>
+</html>
