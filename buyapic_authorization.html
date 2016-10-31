@@ -23,7 +23,7 @@
                         <?php if ( isset($_SESSION['error']['message']) ) { ?>
                         <h4>
                             <?php
-                            echo htmlspecialchars($_SESSION['error']['message']);
+                            echo $_SESSION['error']['message'];
                             unset($_SESSION['error']);
                             ?>
                         </h4>

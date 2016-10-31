@@ -22,11 +22,13 @@ if( isset($_POST['email']) && isset($_POST['password']) )
             $_SESSION['authorized'] = TRUE;
             header('Location: buyapic_index.php');
         } else {
+            //Если хеш введенного пароля не совпал с хешем из бд
             $_SESSION['error'] = [ 'block'=>'authorization', 
                 'message'=>'Введен неверный пароль для '.$_POST['email'] ];
             header('Location: buyapic_index.php?action=authorization');
         }
     } else {
+        //Если в БД не найден такой email (getAuthorizationDataDB вернула NULL)
         $_SESSION['error'] = [ 'block'=>'authorization', 
                 'message'=>'Пользователь с email '.$_POST['email'].' не найден!' ];
         header('Location: buyapic_index.php?action=authorization');

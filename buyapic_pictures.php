@@ -19,7 +19,7 @@ else if ( isset($_POST['choosePreview']) ) {
         mkdir ($tmpFolder);
     }
     
-    if ( !($_SESSION['error']['uploadPreview']=checkUploadPicture('newPreview')) ) {
+    if ( !($_SESSION['error']['uploadPreview'] = checkUploadPicture('newPreview')) ) {
         unset($_SESSION['error']['uploadPreview']);
         $dt = date("Y-m-d_H-i-s");
         $uploadTMPfile = $tmpFolder . '/preview_' . $dt ;
@@ -38,7 +38,7 @@ else if ( isset($_POST['chooseHD']) ) {
         mkdir ($tmpFolder);
     }
     
-    if ( !($_SESSION['error']['uploadHD']=checkUploadPicture('newHD')) ) {
+    if ( !($_SESSION['error']['uploadHD'] = checkUploadPicture('newHD')) ) {
         unset($_SESSION['error']['uploadHD']);
         $dt = date("Y-m-d_H-i-s");
         $uploadTMPfile = $tmpFolder . '/picture_' . $dt ;
